@@ -1,7 +1,0 @@
-{
-  "type": "module",
-  "dependencies": {
-    "viem": "^2.46.1",
-    "vite": "^7.3.1"
-  }
-}
