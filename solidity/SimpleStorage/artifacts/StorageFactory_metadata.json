@@ -1,0 +1,139 @@
+{
+	"compiler": {
+		"version": "0.8.33+commit.64118f21"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_contractId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_favoriteNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "addPersonToStorage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "createSimpleStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_contractIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_peopleId",
+						"type": "uint256"
+					}
+				],
+				"name": "getPersonFromStorage",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "favoriteNumber",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Storage.Person",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "listsOfStorageContracts",
+				"outputs": [
+					{
+						"internalType": "contract Storage",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"StorageFactory.sol": "StorageFactory"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Storage.sol": {
+			"keccak256": "0x65710be7b620553bc6f3700432ab4eb4510c5486b02b2886d9393989de2a8152",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://bbf44937c05a23f1c3157360f405ede2349fd5ef7557b1782381552f171d904f",
+				"dweb:/ipfs/QmPHtQx2rdRRWKkj9MnvteRAVU2KYhGbjVXxMYGWiyBjeZ"
+			]
+		},
+		"StorageFactory.sol": {
+			"keccak256": "0x830242f1a8d86d3e0b8fa2f460e38852ce58940ddfb5d7ea394ded270bf05f35",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://da0492911d6b687602f0b7dcf2198f00d49e4478b4fd8246b6fe13b5d2118494",
+				"dweb:/ipfs/QmNk8wpwC2czVz1Z2kyxdie3AXpsXYzUW3YCtiezH2X47S"
+			]
+		}
+	},
+	"version": 1
+}
