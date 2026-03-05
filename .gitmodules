@@ -1,3 +1,6 @@
 [submodule "full-stack/buy-me-a-coffee"]
 	path = full-stack/buy-me-a-coffee
 	url = https://github.com/kuzminklk/buy-me-a-coffee
+[submodule "full-stack/tsender"]
+	path = full-stack/tsender
+	url = https://github.com/kuzminklk/tsender
