@@ -9,4 +9,4 @@ More information, study path, summary in [detached Notion Page](https://www.noti
 Sections-projects in detached submodules
 
 ### Usage
-To inicialize submodules: ```git submodule init```
+To initialize submodules: ```git submodule init```
