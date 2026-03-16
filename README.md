@@ -9,5 +9,5 @@ More information, study path, summary in [detached Notion Page](https://www.noti
 Sections projects in detached submodules
 
 ### Usage
-To clone with submodules: ```git clone --recursive```
+To clone with submodules: ```git clone --recursive --remote-submodules```
 To initialize submodules: ```git submodule update --init --recursive```
