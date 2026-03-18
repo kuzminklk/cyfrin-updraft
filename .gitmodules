@@ -1,8 +1,8 @@
 [submodule "full-stack/buy-me-a-coffee"]
 	path = full-stack/buy-me-a-coffee
-	url = https://github.com/kuzminklk/buy-me-a-coffee
+	url = git@github.com:kuzminklk/buy-me-a-coffee.git
 	branch = main
 [submodule "full-stack/tsender"]
 	path = full-stack/tsender
-	url = https://github.com/kuzminklk/tsender
+	url = git@github.com:kuzminklk/tsender.git
 	branch = main
