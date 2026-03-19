@@ -6,7 +6,3 @@
 	path = full-stack/tsender
 	url = git@github.com:kuzminklk/tsender.git
 	branch = main
-[submodule "full-stack/nft-marketplace"]
-	path = full-stack/nft-marketplace
-	url = git@github.com:kuzminklk/nft-marketplace.git
-	branch = main
