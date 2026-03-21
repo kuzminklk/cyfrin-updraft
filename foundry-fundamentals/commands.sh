@@ -12,10 +12,12 @@ anvil # Turn on local blockchain
 # Init workspace
 forge init
 
+# Compile
 forge compile 
 # Same as
 forge build
 
+# Run tests
 forge test
 
 # Delpoy contract
