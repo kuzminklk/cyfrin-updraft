@@ -1,0 +1,35 @@
+{
+  "../../full-stack/buy-me-a-coffee": {
+    "rev": "45f79dd8a88b1237a32cbb961292e9d32d210edd"
+  },
+  "../../full-stack/nft-marketplace": {
+    "rev": "672cfc49d8ce73d6c0abfe5748a9d802168ac708"
+  },
+  "../../full-stack/tsender": {
+    "rev": "b8e9d91d849033f3ea48505498f4a017d24172e5"
+  },
+  "full-stack/buy-me-a-coffee": {
+    "branch": {
+      "name": "main",
+      "rev": "45f79dd8a88b1237a32cbb961292e9d32d210edd"
+    }
+  },
+  "full-stack/nft-marketplace": {
+    "branch": {
+      "name": "main",
+      "rev": "672cfc49d8ce73d6c0abfe5748a9d802168ac708"
+    }
+  },
+  "full-stack/tsender": {
+    "branch": {
+      "name": "main",
+      "rev": "b8e9d91d849033f3ea48505498f4a017d24172e5"
+    }
+  },
+  "lib/openzeppelin-contracts": {
+    "tag": {
+      "name": "v5.6.1",
+      "rev": "5fd1781b1454fd1ef8e722282f86f9293cacf256"
+    }
+  }
+}
