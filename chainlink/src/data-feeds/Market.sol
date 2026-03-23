@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
-import { AggregatorV3Interface } from "@chainlink/contracts@1.3.0/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
-import { Ownable } from "@openzeppelin/contracts@5.2.0/access/Ownable.sol";
+import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 import { Copper } from "../solidity/ERC20.sol";
 
