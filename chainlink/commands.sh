@@ -27,6 +27,22 @@ forge script script/DeployCounter.s.sol --rpc-url sepolia --account development-
 # — Token Sender —
 forge script script/DeployTokenSender.s.sol --rpc-url sepolia --account development-1 --broadcast --verify
 
+# — Vault —
+forge script script/DeployVault.s.sol --rpc-url base-sepolia --account development-1 --broadcast --verify
+
+# — Message Sender —
+forge script script/DeployMessageSender.s.sol --rpc-url sepolia --account development-1 --broadcast --verify
+
+# — Message Reciver —
+forge script script/DeployMessageReciver.s.sol --rpc-url base-sepolia --account development-1 --broadcast --verify
+
+# — Consumer —
+forge script script/DeployConsumer.s.sol --rpc-url sepolia --account development-1 --broadcast --verify
+
+# — House Picker  —
+forge script script/DeployHousePicker.s.sol --rpc-url sepolia --account development-1 --broadcast --verify
+
+
 # ——— Call functions (Change state) ———
 
 # — ERC20 (Copper) —
@@ -54,4 +70,8 @@ cast call 0xD168401148Af1f54aD474C50E77E95844274Ee96 "getChainlinkDataFeedLatest
 
 # ——— Verify Contract ———
 
+# — Counter —
 forge verify-contract --chain sepolia 0x5564ee43Da2D3168773eC80ca7F6990E6a1522F2 src/automation/Counter.sol:Counter
+
+# — House Picker  —
+forge verify-contract --chain sepolia 0x21D2BCf19056C1bE9f2170EF45A1A0873c0E52cF src/vrf/HousePicker.sol:HousePicker
