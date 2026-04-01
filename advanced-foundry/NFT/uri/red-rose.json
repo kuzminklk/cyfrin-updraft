@@ -1,0 +1,15 @@
+{
+	"name":"Pink Rose",
+	"description":"Rose with little drops of water. Photo taken in 2019",
+	"image":"ipfs://QmNaQZdCm5JPbwbnEsDzEZU6wrFz8hcvgdK8EL3Y8wMmm3",
+	"attributes": [
+		{
+			"trait_type":"type",
+			"value":"rose"
+		},
+		{
+			"trait_type":"color",
+			"value":"pink"
+		}
+	]
+}
