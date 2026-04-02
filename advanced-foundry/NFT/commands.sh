@@ -5,6 +5,9 @@
 # — Flowers —
 forge script script/DeployFlowers.s.sol --rpc-url sepolia --account development-1 --broadcast --verify
 
+# — Mood —
+forge script script/DeployMood.s.sol --rpc-url sepolia --account development-1 --broadcast --verify
+
 
 # ——— Interactions ———
 
