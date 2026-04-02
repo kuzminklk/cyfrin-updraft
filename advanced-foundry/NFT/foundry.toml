@@ -3,6 +3,12 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+fs_permissions = [
+    { access = "read", path = "./broadcast" },
+    { access = "read", path = "./reports" },
+		{ access = "read", path = "./images" },
+		{ access = "read", path = "./uri" }
+]
 
 [rpc_endpoints]
 sepolia = "${SEPOLIA_RPC_URL}"
@@ -15,11 +21,6 @@ anvil-zk = "http://0.0.0.0:8011"
 [etherscan]
 mainnet = { key = "${ETHERSCAN_API_KEY}" }
 sepolia = { key = "${ETHERSCAN_API_KEY}" }
-
-fs_permissions = [
-    { access = "read", path = "./broadcast" },
-    { access = "read", path = "./reports" },
-]
 
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
