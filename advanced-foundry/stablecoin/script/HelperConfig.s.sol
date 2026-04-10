@@ -35,6 +35,7 @@ contract HelperConfig is Script {
 		}
 	}
 
+	// TODO: REVIEW WBTC DECIMALS
 	function getEhtereumSepoliaConfig() public pure returns (NetworkConfig memory) {
 		return NetworkConfig({
 			wethToUsdPriceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306,

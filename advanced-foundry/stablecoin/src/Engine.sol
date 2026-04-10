@@ -19,21 +19,22 @@ Layout of functions: (in theory)
 1. Constructor
 2. Recive Function
 3. Fallback function
-4. External
+4. public
 5. Public
-6. Internal
+6. private
 7. Private
 8. View, Pure
 */
 
 /* 
 Layout of functions sections: (in practice here)
-1. Deposit
-2. Mint Stablecoins
-3. Collateral (Calculate, Redeem)
-4. Burn Stablecoins
-5. Health Factor
-6. Liquidation
+1. Constructor
+2. Deposit
+3. Mint Stablecoins
+4. Collateral (Calculate, Redeem)
+5. Burn Stablecoins
+6. Health Factor
+7. Liquidation
 */
 
 
@@ -47,6 +48,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 import { Stablecoin } from "./Stablecoin.sol";
+import { Oracle } from "./libraries/Oracle.sol";
 
 
 /**
@@ -69,15 +71,32 @@ contract Engine is ReentrancyGuardTransient {
 	error Engine__TokensMustMatchPriceFeeds();
 	error Engine__TokenNotAllowed();
 	error Engine__TransferFailed();
-	error Engine__BreaksHealthFactor(uint256 healthFactor);
-	error Engine_MintFailed();
+	error Engine__MintFailed();
+	error Engine__OraclePriceIsStale();
+
+	error Engine__HealthFactorIsOK();
+	error Engine__BreaksLiquidationHealthFactorThreshold(uint256 healthFactor);
+	error Engine__BreaksOvercollateralizationHealthFactorThreshold(uint256 healthFactor);
+
+	// — Type —
+	
+	using Oracle for AggregatorV3Interface;
 
 	// — State Variables —
 
-	uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10; // Add 1e10 to 1e8 Price Feed precision to get 1e18 as common in Ethereum
 	uint256 private constant PRECISION = 1e18;
-	uint256 private constant LIQUIDATION_THRESHOLD = 10; // 10% liqudation buffer
-	uint256 private constant MINIMAL_HEALTH_FACTOR = 1;
+	uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10; // Add 1e10 to 1e8 Price Feed precision to get 1e18 as common in Ethereum
+	uint256 private constant OVERCOLLATERALIZATION_HEALTH_FACTOR_THRESHOLD = 20 * PRECISION / 10;
+	uint256 private constant LIQUIDATION_HEALTH_FACTOR_THRESHOLD = 11 * PRECISION / 10;
+	uint256 private constant MINIMAL_HEALTH_FACTOR_THRESHOLD = 1 * PRECISION;
+
+	/*
+	— Example of Health Factor —
+	1. From Infinite to 2 — OK (Alice puts 2000$ of wETH, takes 500$ of Stablecoin)
+	2. From 2 to 1.1 — Overcollaterization buffer, doesn't give the opportunity to mint additional Stablecoins
+	3. From 1.1 to 1 — Liquidation buffer, User can be liquidated
+	4. From 1 to 0 — Ideally, should be not possible; means that collateral lost value and doesn't be liquidated in time
+	*/
 
 	Stablecoin immutable private i_stablecoin;
 
@@ -110,6 +129,8 @@ contract Engine is ReentrancyGuardTransient {
 
 
 	// ——— Functions ———
+
+	// — Constructor —
 
 	/**
 	 * @param tokens Addresses of acceptable ERC20 tokens for collateral
@@ -158,14 +179,14 @@ contract Engine is ReentrancyGuardTransient {
 	
 	/**
 	 * @param amount The amount of tokens to mint
-	 * @dev User must have two times more collateral for minting value (*2 overcollateralization)
+	 * @dev User must have two times more collateral for minting value (200% overcollateralization)
 	 */
 	function mintStablecoins(uint256 amount) public amountMoreThanZero(amount) nonReentrant() {
 		s_userToMintedStablecoins[msg.sender] += amount;
-		_checkHealthFactor(msg.sender);
+		_checkOvercollateralizationHealthFactor(msg.sender);
 		bool success = i_stablecoin.mint(msg.sender, amount);
 		if (!success) {
-			revert Engine_MintFailed();
+			revert Engine__MintFailed();
 		}
 	}
 
@@ -178,8 +199,17 @@ contract Engine is ReentrancyGuardTransient {
 	 */
 	function getValueInUSD(address token, uint256 amount) public view returns (uint256) {
 		AggregatorV3Interface priceFeed = AggregatorV3Interface(s_tokenToPriceFeed[token]);
+		if (priceFeed.checkPriceStaleness()) revert Engine__OraclePriceIsStale();
 		( , int256 price, , , ) = priceFeed.latestRoundData(); // Returns price with 1e8 precision
 		return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
+	}
+
+	function getCollateralTokens() public view returns(address[] memory) {
+		return s_collateralTokens;
+	}
+
+	function getCollateralBalance(address user, address token) public view returns (uint256) {
+		return s_userToDeposit[user][token];
 	}
 
 	/**
@@ -195,22 +225,30 @@ contract Engine is ReentrancyGuardTransient {
 		return total;
 	}
 
-	function redeemCollateral(address token, uint256 amount) public amountMoreThanZero(amount) nonReentrant() {
-		s_userToDeposit[msg.sender][token] -= amount;
-		emit CollateralRedeemed(msg.sender, token, amount);
+	function redeemCollateral(address token, uint256 amount) public amountMoreThanZero(amount) {
+		_redeemCollateralFromTo(token, amount, msg.sender, msg.sender);
+		_checkOvercollateralizationHealthFactor(msg.sender);
+	}
 
-		bool success = IERC20(token).transfer(msg.sender, amount);	
+	function _redeemCollateralFromTo(address token, uint256 amount, address from, address to) private amountMoreThanZero(amount) {
+		s_userToDeposit[from][token] -= amount;
+		emit CollateralRedeemed(from, token, amount);
+
+		bool success = IERC20(token).transfer(to, amount);	
 		if (!success) {
 			revert Engine__TransferFailed();
 		}
-		_checkHealthFactor(msg.sender);
 	}
 
 	// — Burn Stablecoins —
 
 	function burnStablecoins(uint256 amount) public amountMoreThanZero(amount) {
-		s_userToMintedStablecoins[msg.sender] -= amount;
-		bool success = i_stablecoin.transferFrom(msg.sender, address(this), amount);
+		_burnStablecoinsFromTo(amount, msg.sender, msg.sender);
+	}
+
+	function _burnStablecoinsFromTo(uint256 amount, address from, address to) private amountMoreThanZero(amount) {
+		s_userToMintedStablecoins[to] -= amount;
+		bool success = i_stablecoin.transferFrom(from, address(this), amount);
 		if (!success) {
 			revert Engine__TransferFailed();
 		}
@@ -224,7 +262,7 @@ contract Engine is ReentrancyGuardTransient {
 
 	// — Health Factor —
 
-	function _getUserState(address user) internal view returns(uint256 totalStablecoinsMinted, uint256 collateralValue /* In USD */) {
+	function _getUserState(address user) private view returns(uint256 totalStablecoinsMinted, uint256 collateralValue /* In USD */) {
 		totalStablecoinsMinted = s_userToMintedStablecoins[user];
 		collateralValue = getCollateralValue(user);
 	}
@@ -235,32 +273,67 @@ contract Engine is ReentrancyGuardTransient {
 	 */
 	function getHealthFactor(address user) public view returns (uint256) {
 		(uint256 totalStablecoinsMinted, uint256 collateralValue) = _getUserState(user);
-		uint256 liquidationBuffer = (totalStablecoinsMinted * LIQUIDATION_THRESHOLD) / 100;
-		return (collateralValue / (totalStablecoinsMinted + liquidationBuffer));
+		if (totalStablecoinsMinted == 0) {
+			return type(uint256).max; // If user have no debt, we consider his health factor as infinite (max uint256 value)
+		}
+		return collateralValue * PRECISION / totalStablecoinsMinted;
 	}
 
 	/**
-	 * @notice Reverts if Health Factor breaks MINIMAL_HEALTH_FACTOR (usually 1)
+	 * @notice Reverts if Health Factor breaks OVERCOLLATERALIZATION_HEALTH_FACTOR_THRESHOLD
 	 */
-	function _checkHealthFactor(address user) internal view {
+	function _checkOvercollateralizationHealthFactor(address user) private view {
 		uint256 healthFactor = getHealthFactor(user);
-		if (healthFactor < MINIMAL_HEALTH_FACTOR) {
-			revert Engine__BreaksHealthFactor(healthFactor);
+		if (healthFactor < OVERCOLLATERALIZATION_HEALTH_FACTOR_THRESHOLD) {
+			revert Engine__BreaksOvercollateralizationHealthFactorThreshold(healthFactor);
+		}
+	}
+
+	/**
+	 * @notice Reverts if Health Factor breaks LIQUIDATION_HEALTH_FACTOR_THRESHOLD
+	 */
+	function _checkLiquidationHealthFactor(address user) private view {
+		uint256 healthFactor = getHealthFactor(user);
+		if (healthFactor < LIQUIDATION_HEALTH_FACTOR_THRESHOLD) {
+			revert Engine__BreaksLiquidationHealthFactorThreshold(healthFactor);
 		}
 	}
 
 	// — Liquidation —
 
 	/**
-	 * Liquidation mechanics:
+	 * — Liquidation example —
 	 * 1. Alice put 100$ of wETH as collateral and take 50$ of Stablecoin (*2 overcollateralization)
 	 * 2. ETH price goes down to 55$ and happens Alice liqudation (10% liqudation buffer)
 	 * 3. Someone buys Alice wETH collateral (worth 55$) for 50$ of Stablecoin and grab extra 5$ as reward for liquidation
 	 */
-	function liqudate() external {
+	function liqudate(address user, address token, uint256 amount) public amountMoreThanZero(amount) nonReentrant() {
+		uint256 startingUserHealthFactor = getHealthFactor(user);
+		if (startingUserHealthFactor > LIQUIDATION_HEALTH_FACTOR_THRESHOLD) {
+			revert Engine__HealthFactorIsOK();
+		}
 
+		uint256 availableTokensForLiquidation = s_userToDeposit[user][token];
+		uint256 tokensValueInUSD = getValueInUSD(token, amount);
+
+		// TODO: REVIEW THIS PART
+		/*
+		— Logic —
+		1. Take Stablecoins from sender and burn, substract debt from taken user
+		2. Redeem collateral from user to sender
+		3. User have no debt and no collateral, but have his Stablecoins
+		4. Sender lost his stablecoins but get tokens for 110% USD value of them
+
+		— Issues —
+		? Sender lost his Stablecoins but don't lost his debt → Sender have Health Factor Check
+		*/
+		_burnStablecoinsFromTo(tokensValueInUSD, msg.sender, user);
+		_redeemCollateralFromTo(token, amount, user, msg.sender);
+
+		uint256 senderHealthFactor = getHealthFactor(msg.sender);
+		if (senderHealthFactor <= LIQUIDATION_HEALTH_FACTOR_THRESHOLD) {
+			revert Engine__BreaksLiquidationHealthFactorThreshold(senderHealthFactor);
+		}
 	}
-
-
 
 }
