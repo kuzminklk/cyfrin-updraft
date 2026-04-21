@@ -19,11 +19,9 @@ Layout of functions: (in theory)
 1. Constructor
 2. Recive Function
 3. Fallback function
-4. public
-5. Public
-6. private
-7. Private
-8. View, Pure
+4. Public
+5. Private
+6. View, Pure
 */
 
 /* 
