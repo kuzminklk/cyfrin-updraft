@@ -30,11 +30,16 @@ Layout of functions: (in theory)
 
 pragma solidity ^0.8.24;
 
-import { TokenPool } from "@chainlink-ccip/contracts/src/v0.8/ccip/pools/TokenPool.sol";
+/* import { TokenPool } from "@chainlink-ccip/contracts/src/v0.8/ccip/pools/TokenPool.sol";
 import { Pool } from "@chainlink-ccip/contracts/src/v0.8/ccip/libraries/Pool.sol";
-import { IERC20 } from "@chainlink-ccip/contracts/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/token/ERC20/IERC20.sol";
+import { IERC20 } from "@chainlink-ccip/contracts/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/token/ERC20/IERC20.sol"; */
+
+import { TokenPool } from "@chainlink/contracts-ccip/contracts/pools/TokenPool.sol";
+import { Pool } from "@chainlink/contracts-ccip/contracts/libraries/Pool.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { IToken } from "./interfaces/IToken.sol";
+
 
 
 contract CustomTokenPool is TokenPool {
