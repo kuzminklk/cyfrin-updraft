@@ -43,14 +43,14 @@ pragma solidity ^0.8.19;
 import { console, Test } from "forge-std/Test.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IAccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
-import { CCIPLocalSimulatorFork, Register } from "@chainlink-local/src/ccip/CCIPLocalSimulatorFork.sol";
-import { IERC20 } from "@chainlink-ccip/contracts/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/token/ERC20/IERC20.sol";
-import { RegistryModuleOwnerCustom } from "@chainlink-ccip/contracts/src/v0.8/ccip/tokenAdminRegistry/RegistryModuleOwnerCustom.sol";
-import { TokenAdminRegistry } from "@chainlink-ccip/contracts/src/v0.8/ccip/tokenAdminRegistry/TokenAdminRegistry.sol";
-import { RateLimiter } from "@chainlink-ccip/contracts/src/v0.8/ccip/libraries/RateLimiter.sol";
-import { Client } from "@chainlink-ccip/contracts/src/v0.8/ccip/libraries/Client.sol";
-import { IRouterClient } from "@chainlink-ccip/contracts/src/v0.8/ccip/interfaces/IRouterClient.sol";
-import { TokenPool } from "@chainlink-ccip/contracts/src/v0.8/ccip/pools/TokenPool.sol";
+import { CCIPLocalSimulatorFork, Register } from "@chainlink/local/src/ccip/CCIPLocalSimulatorFork.sol";
+import { IERC20 } from "@openzeppelin/contracts@4.8.3/token/ERC20/IERC20.sol";
+import { RegistryModuleOwnerCustom } from "@chainlink/contracts-ccip/contracts/tokenAdminRegistry/RegistryModuleOwnerCustom.sol";
+import { TokenAdminRegistry } from "@chainlink/contracts-ccip/contracts/tokenAdminRegistry/TokenAdminRegistry.sol";
+import { RateLimiter } from "@chainlink/contracts-ccip/contracts/libraries/RateLimiter.sol";
+import { Client } from "@chainlink/contracts-ccip/contracts/libraries/Client.sol";
+import { IRouterClient } from "@chainlink/contracts-ccip/contracts/interfaces/IRouterClient.sol";
+import { TokenPool } from "@chainlink/contracts-ccip/contracts/pools/TokenPool.sol";
 
 import { Token } from "../src/Token.sol";
 import { Vault } from "../src/Vault.sol";
@@ -121,8 +121,6 @@ contract TestEngine is Test {
 			sepoliaToken.grantMintAndBurnRole(address(sepoliaVault));
 			payable(address(sepoliaVault)).call{value: VAULT_INITIAL_BALANCE}("");
 			sepoliaCustomTokenPool = new CustomTokenPool(IERC20(address(sepoliaToken)), new address[](0), sepoliaNetworkDetails.rmnProxyAddress, sepoliaNetworkDetails.routerAddress);
-
-			sepoliaToken.grantMintAndBurnRole(address(sepoliaVault));
 			sepoliaToken.grantMintAndBurnRole(address(sepoliaCustomTokenPool));
 			RegistryModuleOwnerCustom(sepoliaNetworkDetails.registryModuleOwnerCustomAddress).registerAdminViaOwner(address(sepoliaToken));
 			TokenAdminRegistry(sepoliaNetworkDetails.tokenAdminRegistryAddress).acceptAdminRole(address(sepoliaToken));
@@ -141,12 +139,7 @@ contract TestEngine is Test {
 
 		vm.startPrank(OWNER);
 			baseSepoliaToken = new Token();
-			baseSepoliaVault = new Vault(IToken(address(baseSepoliaToken)));
-			baseSepoliaToken.grantMintAndBurnRole(address(baseSepoliaVault));
-			payable(address(baseSepoliaVault)).call{value: VAULT_INITIAL_BALANCE}("");
 			baseSepoliaCustomTokenPool = new CustomTokenPool(IERC20(address(baseSepoliaToken)), new address[](0), baseSepoliaNetworkDetails.rmnProxyAddress, baseSepoliaNetworkDetails.routerAddress);
-
-			baseSepoliaToken.grantMintAndBurnRole(address(baseSepoliaVault));
 			baseSepoliaToken.grantMintAndBurnRole(address(baseSepoliaCustomTokenPool));
 			RegistryModuleOwnerCustom(baseSepoliaNetworkDetails.registryModuleOwnerCustomAddress).registerAdminViaOwner(address(baseSepoliaToken));
 			TokenAdminRegistry(baseSepoliaNetworkDetails.tokenAdminRegistryAddress).acceptAdminRole(address(baseSepoliaToken));
@@ -159,13 +152,13 @@ contract TestEngine is Test {
 		vm.selectFork(fork);
 
 		bytes[] memory remotePoolAddresses = new bytes[](1);
-		remotePoolAddresses[0] = abi.encode(remotePool);
+		remotePoolAddresses[0] = abi.encodePacked(address(remotePool));
 
 		TokenPool.ChainUpdate[] memory chainsToAdd = new TokenPool.ChainUpdate[](1);
 		chainsToAdd[0] = TokenPool.ChainUpdate({
 			remoteChainSelector: remoteChainSelector,
 			remotePoolAddresses: remotePoolAddresses,
-			remoteTokenAddress: abi.encode(remoteToken),
+			remoteTokenAddress: abi.encode(address(remoteToken)),
 			outboundRateLimiterConfig: RateLimiter.Config({
 				isEnabled: false,
 				capacity: 0,
@@ -193,10 +186,15 @@ contract TestEngine is Test {
 
 		Client.EVM2AnyMessage memory message = Client.EVM2AnyMessage({
 			receiver: abi.encode(USER_1),
-			data: "",
+			data: abi.encode(""),
 			tokenAmounts: tokenAmounts,
 			feeToken: localNetworkDetails.linkAddress,
-			extraArgs: ""
+			extraArgs: Client._argsToBytes(
+        Client.GenericExtraArgsV2({
+          gasLimit: 0, // Gas limit for the callback on the destination chain
+          allowOutOfOrderExecution: true // Allows the message to be executed out of order relative to other messages from the same sender
+        })
+      )
 		});
 
 		uint256 fee = IRouterClient(localNetworkDetails.routerAddress).getFee(remoteNetworkDetails.chainSelector, message);
@@ -229,8 +227,8 @@ contract TestEngine is Test {
 		uint256 localInterestRate = sepoliaToken.s_accountToInterestRate(USER_1);
 		assertEq(localBalanceAfter, 0);
 
-		vm.selectFork(SEPOLIA_FORK);
 		ccipLocalSimulatorFork.switchChainAndRouteMessage(BASE_SEPOLIA_FORK);
+		
 		vm.selectFork(BASE_SEPOLIA_FORK);
 		uint256 remoteBalanceAfter = baseSepoliaToken.balanceOf(USER_1);
 		uint256 remoteInterestRate = baseSepoliaToken.s_accountToInterestRate(USER_1);
