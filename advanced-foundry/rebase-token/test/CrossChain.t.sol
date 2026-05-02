@@ -95,59 +95,91 @@ contract TestEngine is Test {
 	CCIPLocalSimulatorFork public ccipLocalSimulatorFork;
 
 
+	// Do Set Up
 	function setUp() public {
-		SEPOLIA_FORK = vm.createSelectFork("sepolia"); // Chose Sepolia fork
+		// Create Forks
+		SEPOLIA_FORK = vm.createFork("sepolia");
 		BASE_SEPOLIA_FORK = vm.createFork("base-sepolia");
+
+		// Create ccipLocalSimulatorFork and make persistent across Forks
+		vm.selectFork(SEPOLIA_FORK);
 		ccipLocalSimulatorFork = new CCIPLocalSimulatorFork();
 		vm.makePersistent(address(ccipLocalSimulatorFork));
 
-		vm.deal(OWNER, OWNER_INITIAL_BALANCE);
-		vm.deal(USER_1, USER_1_INITIAL_BALANCE);
-		vm.deal(USER_2, USER_2_INITIAL_BALANCE);
-		ccipLocalSimulatorFork.requestLinkFromFaucet(USER_1, USER_1_INITIAL_BALANCE);
-		ccipLocalSimulatorFork.requestLinkFromFaucet(USER_2, USER_2_INITIAL_BALANCE);
-
-		// Get network details
+		// Get networks details
 		vm.selectFork(SEPOLIA_FORK);
 		sepoliaNetworkDetails = ccipLocalSimulatorFork.getNetworkDetails(block.chainid);
 		vm.selectFork(BASE_SEPOLIA_FORK);
 		baseSepoliaNetworkDetails = ccipLocalSimulatorFork.getNetworkDetails(block.chainid);
 
-		// Deploy for Sepolia
+
+		// — Sepolia Deployment —
+
+		// Fund Owner and Users for Sepolia
 		vm.selectFork(SEPOLIA_FORK);
-		vm.startPrank(OWNER);
-			sepoliaToken = new Token();
-			sepoliaVault = new Vault(IToken(address(sepoliaToken)));
-			sepoliaToken.grantMintAndBurnRole(address(sepoliaVault));
-			payable(address(sepoliaVault)).call{value: VAULT_INITIAL_BALANCE}("");
-			sepoliaCustomTokenPool = new CustomTokenPool(IERC20(address(sepoliaToken)), new address[](0), sepoliaNetworkDetails.rmnProxyAddress, sepoliaNetworkDetails.routerAddress);
-			sepoliaToken.grantMintAndBurnRole(address(sepoliaCustomTokenPool));
-			RegistryModuleOwnerCustom(sepoliaNetworkDetails.registryModuleOwnerCustomAddress).registerAdminViaOwner(address(sepoliaToken));
-			TokenAdminRegistry(sepoliaNetworkDetails.tokenAdminRegistryAddress).acceptAdminRole(address(sepoliaToken));
-			TokenAdminRegistry(sepoliaNetworkDetails.tokenAdminRegistryAddress).setPool(address(sepoliaToken), address(sepoliaCustomTokenPool));
-		vm.stopPrank();
-
-
-		// Deploy for Base Sepolia
-		vm.selectFork(BASE_SEPOLIA_FORK);
-
 		vm.deal(OWNER, OWNER_INITIAL_BALANCE);
 		vm.deal(USER_1, USER_1_INITIAL_BALANCE);
 		vm.deal(USER_2, USER_2_INITIAL_BALANCE);
 		ccipLocalSimulatorFork.requestLinkFromFaucet(USER_1, USER_1_INITIAL_BALANCE);
 		ccipLocalSimulatorFork.requestLinkFromFaucet(USER_2, USER_2_INITIAL_BALANCE);
 
+		// Deploy Token, Vault, Pool for Sepolia
+		vm.selectFork(SEPOLIA_FORK);
 		vm.startPrank(OWNER);
+			// Deploy Token and Vault
+			sepoliaToken = new Token();
+			sepoliaVault = new Vault(IToken(address(sepoliaToken)));
+			// Grant a Role for Vault
+			sepoliaToken.grantMintAndBurnRole(address(sepoliaVault));
+			// Fund the Vault with Ether
+			payable(address(sepoliaVault)).call{value: VAULT_INITIAL_BALANCE}("");
+			// Deploy Custom Token Pool
+			sepoliaCustomTokenPool = new CustomTokenPool(IERC20(address(sepoliaToken)), new address[](0), sepoliaNetworkDetails.rmnProxyAddress, sepoliaNetworkDetails.routerAddress);
+			console.log("Deployed a Sepolia Custom Token Pool at", address(sepoliaCustomTokenPool));
+			// Grant a Role for Custom Token Pool
+			sepoliaToken.grantMintAndBurnRole(address(sepoliaCustomTokenPool));
+			// Register Admin Role
+			RegistryModuleOwnerCustom(sepoliaNetworkDetails.registryModuleOwnerCustomAddress).registerAdminViaOwner(address(sepoliaToken));
+			// Accept Admin Role
+			TokenAdminRegistry(sepoliaNetworkDetails.tokenAdminRegistryAddress).acceptAdminRole(address(sepoliaToken));
+			// Set Pool for Token
+			TokenAdminRegistry(sepoliaNetworkDetails.tokenAdminRegistryAddress).setPool(address(sepoliaToken), address(sepoliaCustomTokenPool));
+			console.log("Set a Sepolia Custom Token Pool from TokenAdminRegistry at", TokenAdminRegistry(sepoliaNetworkDetails.tokenAdminRegistryAddress).getPool(address(sepoliaToken)));
+		vm.stopPrank();
+
+
+		// — Base Sepolia Deployment —
+
+		// Fund Owner and Users for Base Sepolia
+		vm.selectFork(BASE_SEPOLIA_FORK);
+		vm.deal(OWNER, OWNER_INITIAL_BALANCE);
+		vm.deal(USER_1, USER_1_INITIAL_BALANCE);
+		vm.deal(USER_2, USER_2_INITIAL_BALANCE);
+		ccipLocalSimulatorFork.requestLinkFromFaucet(USER_1, USER_1_INITIAL_BALANCE);
+		ccipLocalSimulatorFork.requestLinkFromFaucet(USER_2, USER_2_INITIAL_BALANCE);
+
+		// Deploy Token, Pool Base Sepolia
+		vm.selectFork(BASE_SEPOLIA_FORK);
+		vm.startPrank(OWNER);
+			// Deploy Token
 			baseSepoliaToken = new Token();
+			// Deploy Custom Token Pool
 			baseSepoliaCustomTokenPool = new CustomTokenPool(IERC20(address(baseSepoliaToken)), new address[](0), baseSepoliaNetworkDetails.rmnProxyAddress, baseSepoliaNetworkDetails.routerAddress);
+			console.log("Deployed a Base Sepolia Custom Token Pool at", address(baseSepoliaCustomTokenPool));
+			// Grant a Role for Custom Token Pool
 			baseSepoliaToken.grantMintAndBurnRole(address(baseSepoliaCustomTokenPool));
+			// Register Admin Role
 			RegistryModuleOwnerCustom(baseSepoliaNetworkDetails.registryModuleOwnerCustomAddress).registerAdminViaOwner(address(baseSepoliaToken));
+			// Accept Admin Role
 			TokenAdminRegistry(baseSepoliaNetworkDetails.tokenAdminRegistryAddress).acceptAdminRole(address(baseSepoliaToken));
+			// Set Pool for Token
 			TokenAdminRegistry(baseSepoliaNetworkDetails.tokenAdminRegistryAddress).setPool(address(baseSepoliaToken), address(baseSepoliaCustomTokenPool));
+			console.log("Set a Base Sepolia Custom Token Pool from TokenAdminRegistry at", TokenAdminRegistry(baseSepoliaNetworkDetails.tokenAdminRegistryAddress).getPool(address(baseSepoliaToken)));
 		vm.stopPrank();
 	}
 
 
+	// Configure Custom Token Pool
 	function configureTokenPool(uint256 fork, address localPool, address remotePool, address remoteToken, uint64 remoteChainSelector) public {
 		vm.selectFork(fork);
 
@@ -173,17 +205,23 @@ contract TestEngine is Test {
 
 		vm.startPrank(OWNER);
 			TokenPool(localPool).applyChainUpdates(new uint64[](0), chainsToAdd);
+			console.log("Configure Custom Token Pool for Fork:", fork);
+			console.log("With localPool:", localPool);
+			console.log("With remotePool:", remotePool);
+			console.log("With remoteToken:", remoteToken);
 		vm.stopPrank();
 	}
 
-
+	// Bridge Tokens
 	function bridgeTokens(uint256 amount, uint256 localFork, uint256 remoteFork, Register.NetworkDetails memory localNetworkDetails, Register.NetworkDetails memory remoteNetworkDetails, Token localToken, Token remoteToken) public {
+		// Amounts
 		Client.EVMTokenAmount[] memory tokenAmounts = new Client.EVMTokenAmount[](1);
 		tokenAmounts[0] = Client.EVMTokenAmount({
 			token: address(localToken),
 			amount: amount
 		});
 
+		// Message
 		Client.EVM2AnyMessage memory message = Client.EVM2AnyMessage({
 			receiver: abi.encode(USER_1),
 			data: abi.encode(""),
@@ -197,14 +235,19 @@ contract TestEngine is Test {
       )
 		});
 
+		// Calculate an approve fees
 		uint256 fee = IRouterClient(localNetworkDetails.routerAddress).getFee(remoteNetworkDetails.chainSelector, message);
 		IERC20(localNetworkDetails.linkAddress).approve(localNetworkDetails.routerAddress, fee);
 		IERC20(address(localToken)).approve(localNetworkDetails.routerAddress, amount);
 
+		// Send message to Router
 		IRouterClient(localNetworkDetails.routerAddress).ccipSend(remoteNetworkDetails.chainSelector, message);
+		console.log("CCIP message sended from localFork:", localFork);
+		console.log("With amounts:", amount);
 	}
 
 
+	// Test Cross-Chain Bridge functionality
 	function testBridgeTokens(uint256 amount) public {
 
 		// — Configure pools —
@@ -216,14 +259,17 @@ contract TestEngine is Test {
 		// — Testing —
 		vm.selectFork(SEPOLIA_FORK);
 		uint256 boundedAmount = bound(amount, 1 gwei, 1 ether);
+		console.log("Bounded amount is:", boundedAmount);
 		
 		vm.startPrank(USER_1);
 			sepoliaVault.deposit{value: boundedAmount}();
 			bridgeTokens(boundedAmount, SEPOLIA_FORK, BASE_SEPOLIA_FORK, sepoliaNetworkDetails, baseSepoliaNetworkDetails, sepoliaToken, baseSepoliaToken);
+			console.log("Tokens Bridged with amount:", boundedAmount);
 		vm.stopPrank();
 
 		vm.warp(block.timestamp + 1 hours);
 		uint256 localBalanceAfter = sepoliaToken.balanceOf(USER_1);
+		console.log("Local balance after Bridging:", localBalanceAfter);
 		uint256 localInterestRate = sepoliaToken.s_accountToInterestRate(USER_1);
 		assertEq(localBalanceAfter, 0);
 
@@ -231,9 +277,11 @@ contract TestEngine is Test {
 		
 		vm.selectFork(BASE_SEPOLIA_FORK);
 		uint256 remoteBalanceAfter = baseSepoliaToken.balanceOf(USER_1);
+		console.log("Remote balance after Bridging:", remoteBalanceAfter);
 		uint256 remoteInterestRate = baseSepoliaToken.s_accountToInterestRate(USER_1);
-		assertEq(remoteBalanceAfter, boundedAmount);
+		console.log("Remote interest rate after Bridging:", remoteInterestRate);
 
+		assertEq(remoteBalanceAfter, boundedAmount);
 		assertEq(localInterestRate, remoteInterestRate);
 	}
 }
