@@ -1,4 +1,10 @@
 
+### Description
+Rebase Token with CCIP cross-chain functionality
+
+### Status
+Doesn't work. Unknown bug, error with Chainlink Local functionality. Maybe I will rebuild with Hardhat
+
 ### Set up
 Install foundry dependences:
 ```forge install foundry-rs/forge-std --no-git```
