@@ -2,6 +2,9 @@
 ### Description
 Dynamic and static NFTs
 
+### Technologies
+IPFS, SVG, Base64
+
 ### Set up
 Install foundry dependences:
 ```forge install foundry-rs/forge-std --no-git```

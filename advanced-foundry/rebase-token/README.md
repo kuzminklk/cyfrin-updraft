@@ -2,6 +2,9 @@
 ### Description
 Rebase Token with CCIP cross-chain functionality
 
+### Technologies
+CCIP, Chainlink Local
+
 ### Status
 Doesn't work. Unknown bug, error with Chainlink Local functionality. Maybe I will rebuild with Hardhat
 
