@@ -26,7 +26,7 @@ contract GenerateUserOperation is Script {
 	/**
 	 * @notice Add sign to «PackedUserOperation» struct
 	 */
-	function generateAndSignUserOperation(bytes memory _callData, address _sender, uint256 _senderPrivateKey, Configuration.NetworkConfiguration memory _networkConfiguration) public returns (PackedUserOperation memory) {
+	function generateAndSignUserOperation(bytes memory _callData, address _sender, uint256 _senderPrivateKey, Configuration.NetworkConfiguration memory _networkConfiguration) public view returns (PackedUserOperation memory) {
 		// 1. Generate User Operation struct
 		uint256 nonce = vm.getNonce(_sender);
 		PackedUserOperation memory userOperation =_generateUnsignedUserOperation(_callData, _sender, nonce);

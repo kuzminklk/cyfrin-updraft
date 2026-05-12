@@ -68,6 +68,7 @@ contract TestEngine is Test {
 	uint256 public USER_1_INITIAL_BALANCE = 10 ether;
 	uint256 public USER_2_INITIAL_BALANCE = 10 ether;
 	uint256 public VAULT_INITIAL_BALANCE = 10 ether;
+	uint256 public TOKEN_POOL_INITIAL_BALANCE = 10 ether;
 
 	// Percision
 	uint256 public constant PRECISION = 1e18;
@@ -184,7 +185,7 @@ contract TestEngine is Test {
 		vm.selectFork(fork);
 
 		bytes[] memory remotePoolAddresses = new bytes[](1);
-		remotePoolAddresses[0] = abi.encodePacked(address(remotePool));
+		remotePoolAddresses[0] = abi.encode(address(remotePool));
 
 		TokenPool.ChainUpdate[] memory chainsToAdd = new TokenPool.ChainUpdate[](1);
 		chainsToAdd[0] = TokenPool.ChainUpdate({
@@ -229,7 +230,7 @@ contract TestEngine is Test {
 			feeToken: localNetworkDetails.linkAddress,
 			extraArgs: Client._argsToBytes(
         Client.GenericExtraArgsV2({
-          gasLimit: 0, // Gas limit for the callback on the destination chain
+          gasLimit: 500000, // Gas limit for the callback on the destination chain
           allowOutOfOrderExecution: true // Allows the message to be executed out of order relative to other messages from the same sender
         })
       )

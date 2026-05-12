@@ -45,12 +45,10 @@ contract AccountTest is Test {
 		console.log("With private key: ", ownerPrivateKey);
 
 		vm.startPrank(owner);
-			// Here I use code snippet form «Deploy.s.sol» as I can't prank owner for script (owner sets as «Deploy» contract)
+			// Here I don't use «Deploy» script as I can't prank owner for script (owner sets as «Deploy» contract)
 			// —
-			Configuration configuration = new Configuration();
-			Configuration.NetworkConfiguration memory networkConfiguration = configuration.getNetworkConfiguration();
-
-			AccountAbstraction accountAbstractionContract = new AccountAbstraction(networkConfiguration.entryPoint);
+			configuration = new Configuration();
+			accountAbstractionContract = new AccountAbstraction(configuration.getNetworkConfiguration().entryPoint);
 			// —
 
 			usdc = new ERC20Mock();
@@ -87,7 +85,8 @@ contract AccountTest is Test {
 	}
 
 	/** 
-	 * @notice Test that …
+	 * @notice Test that signing user operation works correctly (can recover owner from sign)
+	 * @dev Caller-agnostic test
 	 */
 	function testRecoverSignedOperation() public {
 		// 1. Encode function call
