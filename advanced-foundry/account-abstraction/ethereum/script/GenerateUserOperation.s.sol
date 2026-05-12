@@ -26,9 +26,9 @@ contract GenerateUserOperation is Script {
 	/**
 	 * @notice Add sign to «PackedUserOperation» struct
 	 */
-	function generateAndSignUserOperation(bytes memory _callData, address _sender, uint256 _senderPrivateKey, Configuration.NetworkConfiguration memory _networkConfiguration) public view returns (PackedUserOperation memory) {
+	function generateAndSignUserOperation(bytes memory _callData, address _sender, uint256 _ownerPrivateKey, Configuration.NetworkConfiguration memory _networkConfiguration) public view returns (PackedUserOperation memory) {
 		// 1. Generate User Operation struct
-		uint256 nonce = vm.getNonce(_sender);
+		uint256 nonce = vm.getNonce(_sender) - 1; // Add “- 1” to avoid “AA25 invalid account nonce” error
 		PackedUserOperation memory userOperation =_generateUnsignedUserOperation(_callData, _sender, nonce);
 
 		// 2. Get hash for User Operation struct
@@ -38,7 +38,7 @@ contract GenerateUserOperation is Script {
 		bytes32 digest = userOperationHash.toEthSignedMessageHash();
 
 		// 4. Generate sign form digest and add it to the User Operation struct. Then return it
-		(uint8 v, bytes32 r, bytes32 s) = vm.sign(_senderPrivateKey, digest); // Note: v, r, s order here
+		(uint8 v, bytes32 r, bytes32 s) = vm.sign(_ownerPrivateKey, digest); // Note: v, r, s order here
 		userOperation.signature = abi.encodePacked(r, s, v); // Note: r, s, v order here
 		return userOperation;
 	}

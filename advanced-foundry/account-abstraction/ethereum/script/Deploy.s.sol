@@ -6,7 +6,7 @@ pragma solidity ^0.8.28;
 
 import { Script } from "forge-std/Script.sol";
 
-import { Account as AccountAbstraction } from "../src/ethereum/Account.sol"; // Use alias because Account is an struct from forge-std/Script.sol …
+import { Account as AccountAbstraction } from "../src/Account.sol"; // Use alias because Account is an struct from forge-std/Script.sol …
 import { Configuration } from "./Configuration.s.sol";
 
 

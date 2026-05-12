@@ -52,6 +52,7 @@ contract Account is IAccount, Ownable {
 		i_entryPoint = IEntryPoint(_entryPoint);
 	}
 
+
 	// — External Functions —
 
 	receive() external payable {}
@@ -67,11 +68,13 @@ contract Account is IAccount, Ownable {
 	 * @notice Validate user operation
 	 * @dev General validation function from an interface
 	 * @dev Do not do nonce validation as it handled by entry point smart-contract
+	 * @dev Can put any validation logic (session keys, multisign, etc.)
 	 */
 	function validateUserOp(PackedUserOperation calldata _userOperation, bytes32 _userOperationHash, uint256 _missingAccountFunds) external onlyEntryPoint returns (uint256 _validationData) {
 		_validationData = _validateSignature(_userOperation, _userOperationHash);
 		_payPrefund(_missingAccountFunds);
 	}
+
 
 	// — Internal Functions —
 
