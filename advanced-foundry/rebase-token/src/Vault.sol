@@ -38,6 +38,7 @@ import { Token } from "./Token.sol";
 import { IToken } from "./interfaces/IToken.sol";
 
 
+
 /**
  * @notice Vault that takes deposits and rule Token mint and burn
  */

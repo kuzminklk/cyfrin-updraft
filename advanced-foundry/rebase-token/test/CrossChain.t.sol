@@ -43,7 +43,6 @@ pragma solidity ^0.8.19;
 import { console, Test } from "forge-std/Test.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IAccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
-import { CCIPLocalSimulatorFork, Register } from "@chainlink/local/src/ccip/CCIPLocalSimulatorFork.sol";
 import { IERC20 } from "@openzeppelin/contracts@4.8.3/token/ERC20/IERC20.sol";
 import { RegistryModuleOwnerCustom } from "@chainlink/contracts-ccip/contracts/tokenAdminRegistry/RegistryModuleOwnerCustom.sol";
 import { TokenAdminRegistry } from "@chainlink/contracts-ccip/contracts/tokenAdminRegistry/TokenAdminRegistry.sol";
@@ -51,6 +50,7 @@ import { RateLimiter } from "@chainlink/contracts-ccip/contracts/libraries/RateL
 import { Client } from "@chainlink/contracts-ccip/contracts/libraries/Client.sol";
 import { IRouterClient } from "@chainlink/contracts-ccip/contracts/interfaces/IRouterClient.sol";
 import { TokenPool } from "@chainlink/contracts-ccip/contracts/pools/TokenPool.sol";
+import { CCIPLocalSimulatorFork, Register } from "@chainlink/local/src/ccip/CCIPLocalSimulatorFork.sol";
 
 import { Token } from "../src/Token.sol";
 import { Vault } from "../src/Vault.sol";
@@ -58,7 +58,12 @@ import { IToken } from "../src/interfaces/IToken.sol";
 import { CustomTokenPool } from "../src/CustomTokenPool.sol";
 
 
-contract TestEngine is Test {
+
+/**
+ * @notice Test cross-chain (Chainlink CCIP) functionality
+ * @dev Set up local chainlink CCIP simulator via “CCIPLocalSimulatorFork”, …
+ */
+contract TestCrossChain is Test {
 
 	// Users and balances
 	address public OWNER = makeAddr("OWNER");
@@ -96,7 +101,9 @@ contract TestEngine is Test {
 	CCIPLocalSimulatorFork public ccipLocalSimulatorFork;
 
 
-	// Do Set Up
+	/**
+	 * @notice Do set up, deploy all chainlink-local stuff
+	 */
 	function setUp() public {
 		// Create Forks
 		SEPOLIA_FORK = vm.createFork("sepolia");
@@ -180,7 +187,9 @@ contract TestEngine is Test {
 	}
 
 
-	// Configure Custom Token Pool
+	/**
+	 * @notice Configure Custom Token Pool
+	 */
 	function configureTokenPool(uint256 fork, address localPool, address remotePool, address remoteToken, uint64 remoteChainSelector) public {
 		vm.selectFork(fork);
 
@@ -213,16 +222,19 @@ contract TestEngine is Test {
 		vm.stopPrank();
 	}
 
-	// Bridge Tokens
+
+	/**
+	 * @notice Bridge tokens
+	 */
 	function bridgeTokens(uint256 amount, uint256 localFork, uint256 remoteFork, Register.NetworkDetails memory localNetworkDetails, Register.NetworkDetails memory remoteNetworkDetails, Token localToken, Token remoteToken) public {
-		// Amounts
+		// Generate amounts struct
 		Client.EVMTokenAmount[] memory tokenAmounts = new Client.EVMTokenAmount[](1);
 		tokenAmounts[0] = Client.EVMTokenAmount({
 			token: address(localToken),
 			amount: amount
 		});
 
-		// Message
+		// Generate message struct
 		Client.EVM2AnyMessage memory message = Client.EVM2AnyMessage({
 			receiver: abi.encode(USER_1),
 			data: abi.encode(""),
@@ -236,28 +248,34 @@ contract TestEngine is Test {
       )
 		});
 
-		// Calculate an approve fees
+		// Calculate and approve fees
 		uint256 fee = IRouterClient(localNetworkDetails.routerAddress).getFee(remoteNetworkDetails.chainSelector, message);
 		IERC20(localNetworkDetails.linkAddress).approve(localNetworkDetails.routerAddress, fee);
 		IERC20(address(localToken)).approve(localNetworkDetails.routerAddress, amount);
 
-		// Send message to Router
+		// Send message to the Router
 		IRouterClient(localNetworkDetails.routerAddress).ccipSend(remoteNetworkDetails.chainSelector, message);
 		console.log("CCIP message sended from localFork:", localFork);
 		console.log("With amounts:", amount);
 	}
 
 
-	// Test Cross-Chain Bridge functionality
+	/**
+	 * @notice Test tokens bridging
+	 */
 	function testBridgeTokens(uint256 amount) public {
 
+
 		// — Configure pools —
+
 		vm.selectFork(SEPOLIA_FORK);
 		configureTokenPool(SEPOLIA_FORK, address(sepoliaCustomTokenPool), address(baseSepoliaCustomTokenPool), address(baseSepoliaToken), baseSepoliaNetworkDetails.chainSelector);
 		vm.selectFork(BASE_SEPOLIA_FORK);
 		configureTokenPool(BASE_SEPOLIA_FORK, address(baseSepoliaCustomTokenPool), address(sepoliaCustomTokenPool), address(sepoliaToken), sepoliaNetworkDetails.chainSelector);
 
+
 		// — Testing —
+
 		vm.selectFork(SEPOLIA_FORK);
 		uint256 boundedAmount = bound(amount, 1 gwei, 1 ether);
 		console.log("Bounded amount is:", boundedAmount);

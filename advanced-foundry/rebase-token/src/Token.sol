@@ -47,9 +47,10 @@ import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol"
 
 
 /**
- * @notice Rebase token with flexible supply
+ * @notice Token with flexible supply and cross-chain functionality via CCIP
  */
 contract Token is ERC20, Ownable, AccessControl {
+
 	error Token__InterestRateCanOnlyDecrease(uint256 previousInterestRate, uint256 newInterestRate);
 
 	bytes32 private constant MINT_AND_BURN_ROLE = keccak256("MINT_AND_BURN_ROLE");
@@ -63,12 +64,13 @@ contract Token is ERC20, Ownable, AccessControl {
 	constructor() ERC20("Rebase Token", "TOKEN") Ownable(msg.sender) {
 	}	
 
+
 	// — Interest Rate —
 
 	/**
-	* @notice Set new interest rate
-	* @dev Interest rate can only decrease
-	*/
+	 * @notice Set new interest rate
+	 * @dev Interest rate can only decrease
+	 */
 	function setInterestRate(uint256 _interestRate) external onlyOwner {
 		if (_interestRate >= s_interestRate) {
 			revert Token__InterestRateCanOnlyDecrease(s_interestRate, _interestRate);
@@ -78,18 +80,19 @@ contract Token is ERC20, Ownable, AccessControl {
 	}
 
 	/**
-	* @return interestRate Interest rate with 1e18 percision 
-	*/
+	 * @return interestRate Interest rate with 1e18 percision 
+	 */
 	function _calculateAccountAccumulatedInterestRate(address _account) private view returns (uint256) {
 		uint256 timeElapsed = block.timestamp - s_accountToLastUpdatedTimestamp[_account];
 		return PRECISION + (s_accountToInterestRate[_account] * timeElapsed);
 	}
 
+
 	// — Balance —
 
 	/**
-	* @return balance Balance of account with 1e18 percision
-	*/
+	 * @return balance Balance of account with 1e18 percision
+	 */
 	function balanceOf(address _account) public override view returns (uint256) {
 		return (super.balanceOf(_account) * _calculateAccountAccumulatedInterestRate(_account)) / PRECISION;
 	}
@@ -97,6 +100,7 @@ contract Token is ERC20, Ownable, AccessControl {
 	function principleBalanceOf(address _user) external view returns (uint256) {
 		return super.balanceOf(_user);
 	}
+
 
 	// — Mint —
 
@@ -108,6 +112,9 @@ contract Token is ERC20, Ownable, AccessControl {
 		s_accountToInterestRate[_to] = _interestRate;
 	}
 
+	/**
+	 * @notice Mint accured insterest when user mint, burn or transfer
+	 */
 	modifier mintAccruedInterest(address _account) {
 		uint256 principleBalance = super.balanceOf(_account);
 		uint256 balance = balanceOf(_account);
@@ -117,6 +124,7 @@ contract Token is ERC20, Ownable, AccessControl {
 		_;
 	}
 
+
 	// — Burn —
 
 	function burn(address _from, uint256 _amount) external mintAccruedInterest(_from) onlyRole(MINT_AND_BURN_ROLE) {
@@ -125,6 +133,7 @@ contract Token is ERC20, Ownable, AccessControl {
 		}
 		_burn(_from, _amount);
 	}
+
 
 	// — Transfer —
 
@@ -147,6 +156,7 @@ contract Token is ERC20, Ownable, AccessControl {
 		}
 		return super.transferFrom(_from, _to, _amount);
 	}
+
 
 	// — Roles —
 

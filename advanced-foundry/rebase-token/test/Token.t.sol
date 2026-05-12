@@ -49,7 +49,10 @@ import { Vault } from "../src/Vault.sol";
 import { IToken } from "../src/interfaces/IToken.sol";
 
 
-contract TestEngine is Test {
+/**
+ * @notice Test token functionality
+ */
+contract TestToken is Test {
 
 	address public OWNER = makeAddr("OWNER");
 	uint256 public OWNER_INITIAL_BALANCE = 100 ether;
@@ -78,6 +81,7 @@ contract TestEngine is Test {
 		vm.stopPrank();
 	}
 
+
 	// — Interest Rate —
 
 	function testInterestRate(uint256 amount) public {
@@ -104,15 +108,18 @@ contract TestEngine is Test {
 		vm.stopPrank();
 	}
 
+
 	// — Mint —
 
 	function testCannotMintWithoutRole(uint256 amount) public {
 		uint256 boundedAmount = bound(amount, 1 gwei, 1 ether);
 		vm.startPrank(OWNER);
+			uint256 interestRate = token.s_interestRate();
 			vm.expectPartialRevert(IAccessControl.AccessControlUnauthorizedAccount.selector);
-			token.mint(msg.sender, boundedAmount, token.s_interestRate());
+			token.mint(msg.sender, boundedAmount, interestRate);
 		vm.stopPrank();
 	}
+
 
 	// — Burn —
 
@@ -124,6 +131,7 @@ contract TestEngine is Test {
 			token.burn(msg.sender, boundedAmount);
 		vm.stopPrank();
 	}
+
 
 	// — Transfer —
 
