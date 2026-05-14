@@ -64,15 +64,17 @@ contract AccountTest is Test {
 	 * @notice Test that owner can directly execute commands from «Account»
 	 */
 	function testOwnerCanExecuteCommands() public {
-		// Encode function call
+		// 1. Encode function call
 		address destination = address(usdc);
 		uint256 etherValue = 0;
 		bytes memory functionData = abi.encodeWithSelector(ERC20Mock.mint.selector, address(accountAbstractionContract), TOKENS_AMOUNT_TO_MINT);
 
+		// 2. Do call from an owner to mint mock tokens
 		vm.startPrank(accountAbstractionContract.owner());
 			accountAbstractionContract.execute(destination, etherValue, functionData);
 		vm.stopPrank();
 
+		// 3. Assert tokens amounts
 		assertEq(TOKENS_AMOUNT_TO_MINT, usdc.balanceOf(address(accountAbstractionContract)));
 	}
 
@@ -80,11 +82,12 @@ contract AccountTest is Test {
 	 * @notice Test that not owner can't directly execute commands from «Account»
 	 */
 	function testNotOwnerCannotExecuteCommands() public {
-		// Encode function call
+		// 1. Encode function call
 		address destination = address(usdc);
 		uint256 etherValue = 0;
 		bytes memory functionData = abi.encodeWithSelector(ERC20Mock.mint.selector, address(accountAbstractionContract), TOKENS_AMOUNT_TO_MINT);
 
+		// 2. Do call from not an owner, expect revert
 		vm.startPrank(user1);
 			vm.expectRevert(AccountAbstraction.Account__NotFromEntryPointOrOwner.selector);
 			accountAbstractionContract.execute(destination, etherValue, functionData);
@@ -121,7 +124,7 @@ contract AccountTest is Test {
 	 * @notice Test validation of user operation from “EntryPoint“ contract
 	 */
 	function testValidateUserOperation() public {
-		// That snippet copied from test above
+		// This snippet copied from the test above
 		// —
 			// 1. Encode function call
 			address destination = address(usdc);
@@ -152,7 +155,7 @@ contract AccountTest is Test {
 	 * @notice Test that “EntryPoint“ contract can execute commands from user operation
 	 */
 	function testEntryPointCanExecuteCommands() public {
-		// That snippet copied from test two times above
+		// This snippet copied from the test two times above
 		// —
 			// 1. Encode function call
 			address destination = address(usdc);

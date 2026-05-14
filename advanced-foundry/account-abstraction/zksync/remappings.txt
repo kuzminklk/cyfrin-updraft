@@ -1,3 +1,4 @@
 forge-std/=lib/forge-std/src/
 account-abstraction=lib/account-abstraction
+foundry-era-contracts=lib/foundry-era-contracts
 @openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
