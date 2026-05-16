@@ -6,7 +6,7 @@
 pragma solidity ^0.8.28;
 
 
-// — Libraries imports —
+// — External imports —
 
 import { console, Test } from "forge-std/Test.sol";
 
@@ -15,7 +15,7 @@ import { ERC20Mock } from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
-// Foundry-era-contracts imports
+// Foundry Era Contracts imports
 import { BOOTLOADER_FORMAL_ADDRESS } from "foundry-era-contracts/src/system-contracts/contracts/Constants.sol";
 import { ACCOUNT_VALIDATION_SUCCESS_MAGIC } from "foundry-era-contracts/src/system-contracts/contracts/interfaces/IAccount.sol";
 import { Transaction, MemoryTransactionHelper } from "foundry-era-contracts/src/system-contracts/contracts/libraries/MemoryTransactionHelper.sol";

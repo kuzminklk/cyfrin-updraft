@@ -1,16 +1,24 @@
 
 
+
 // SPDX-License-Identifier: MIT  
 
 pragma solidity ^0.8.28;
 
+
+// — External imports —
+
+// Account Abstraction imports
 import { IAccount } from "account-abstraction/contracts/interfaces/IAccount.sol";
 import { IEntryPoint } from "account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import { PackedUserOperation } from "account-abstraction/contracts/interfaces/PackedUserOperation.sol";
 import { SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS } from "account-abstraction/contracts/core/Helpers.sol";
+
+// OpenZeppelin imports
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+
 
 
 /**

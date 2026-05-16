@@ -10,6 +10,12 @@ import { EIP712 } from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 
+/**
+ * @author kuzminklk
+ * @notice Airdrop sender
+ * @dev Implements Merkle Trees for airdrop allowing
+ * @dev Implements ECDSA signing and EIP712 standart for user ability to pay fees for another account
+ */
 contract Airdrop is EIP712 {
 	using SafeERC20 for IERC20;
 
@@ -36,28 +42,34 @@ contract Airdrop is EIP712 {
 		i_token = _token;
 	}
 
+	/**
+	* @notice Claim airdrop for an account
+	* @dev Needs sign of the user, which allowed for an airdrop
+	*/
 	function claim(address _account, uint256 _amount, bytes32[] calldata _merkleProof, uint8 _v, bytes32 _r, bytes32 _s) external {
-		// Check if account already has claimed
+		// 1. Check if account already has claimed
 		if (s_hasClaimed[_account]) {
 			revert Airdrop__AccountAlreadyHasClaimed();
 		}
 
-		// Check the signature
+		// 2. Check the signature
 		if (!_isValidSignature(_account, getMessageHash(_account, _amount), _v, _r, _s)) {
 			revert Airdrop__InvalidSignature();
 		}
 
-		/* Hash _account and _amount to produce leaf node of Merkle Tree.
-		Hash twice to avoid collisions (second preimage attack) */
+		// 3. Hash _account and _amount to produce leaf node of Merkle Tree.
+		// Hash twice to avoid collisions (second preimage attack)
 		bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(_account, _amount))));
 		bool verified = MerkleProof.verify(_merkleProof, i_merkleRoot, leaf);
 		if (!verified) {
 			revert Airdrop__InvalidProof();
 		}
 
+		// 4. Set variables (change state)
 		s_hasClaimed[_account] = true;
 		emit Claimed(_account, _amount);
 
+		// 5. Do transfer (do interactions)
 		i_token.safeTransfer(_account, _amount);
 	}
 

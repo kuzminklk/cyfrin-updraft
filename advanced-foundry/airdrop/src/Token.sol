@@ -8,8 +8,13 @@ import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 
+/**
+ * @author kuzminklk
+ * @notice Simple Token
+ * @dev Implements ERC20 standart
+ */
 contract Token is ERC20, Ownable {
-	uint256 immutable public INITIAL_SUPPLY = 1000 * 10 ** decimals();
+	uint256 immutable public INITIAL_SUPPLY = 1000 * 10 ** decimals(); // 1000 tokens with 1e18 precision
 
 	constructor() ERC20("Strawberry", "STRAWBERRY") Ownable(msg.sender) {
 		_mint(msg.sender, INITIAL_SUPPLY);

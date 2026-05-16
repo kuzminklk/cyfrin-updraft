@@ -6,7 +6,7 @@
 pragma solidity ^0.8.28;
 
 
-// — Libraries imports —
+// — External imports —
 
 // OpenZeppelin imports
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";

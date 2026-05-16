@@ -1,12 +1,19 @@
 
 ### Description
-Account abstractions for Ethereum
+Account abstractions for Ethereum  
 
 ### Technologies
-ERC-4337
+ERC-4337  
 
 ### Set Up
-Install Foundry dependences:
-```forge install foundry-rs/forge-std --no-git``` 
-```forge install eth-infinitism/account-abstraction --no-git```
-```forge install openzeppelin/openzeppelin-contracts --no-git```
+Install Foundry dependences:  
+```forge install foundry-rs/forge-std --no-git```   
+```forge install eth-infinitism/account-abstraction --no-git```  
+```forge install openzeppelin/openzeppelin-contracts --no-git```  
+
+### Usage
+Basic Foundry commands: ```forge build```, ```forge test```  
+Other appropriate commands in ```./commands.bash```  
+
+### Deployments
+Addresses and hashes at ```./deployments.md``` and more deep information at ```./broadcast/```  

@@ -13,9 +13,7 @@ import { Configuration } from "./Configuration.s.sol";
 contract Deploy is Script {
 
 	function run() public {
-		vm.startBroadcast();
-			deploy();
-		vm.stopBroadcast();
+		deploy();
 	}
 
 	/**
@@ -25,7 +23,9 @@ contract Deploy is Script {
 		Configuration configuration = new Configuration();
 		Configuration.NetworkConfiguration memory networkConfiguration = configuration.getNetworkConfiguration();
 
-		AccountAbstraction accountAbstractionContract = new AccountAbstraction(networkConfiguration.entryPoint);
+		vm.startBroadcast();
+			AccountAbstraction accountAbstractionContract = new AccountAbstraction(networkConfiguration.entryPoint);
+		vm.stopBroadcast();
 
 		return (configuration, accountAbstractionContract);
 	}

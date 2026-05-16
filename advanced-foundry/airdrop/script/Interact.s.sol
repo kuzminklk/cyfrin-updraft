@@ -12,6 +12,9 @@ import { Token } from "../src/Token.sol";
 import { Airdrop } from "../src/Airdrop.sol";
 
 
+/**
+ * @notice Claim interacion
+ */
 contract Claim is Script {
 
 	address public USER_1;

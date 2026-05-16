@@ -12,6 +12,9 @@ import { ValueMultiplication } from "../src/ValueMultiplication.sol";
 import { Value } from "../src/Value.sol";
 
 
+/**
+ * @notice Upgrade contract to newer version
+ */
 contract Upgrade is Script {
 	address public mostRecentlyDeployedProxy;
 	ValueMultiplication public upgradedValueContract;

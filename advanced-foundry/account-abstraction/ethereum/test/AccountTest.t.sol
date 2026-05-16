@@ -1,21 +1,33 @@
 
 
+
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.28;
 
+
+// — External imports —
+
 import { console, Test } from "forge-std/Test.sol";
+
+// Account Abstraction imports
 import { PackedUserOperation } from "account-abstraction/contracts/interfaces/PackedUserOperation.sol";
 import { IEntryPoint } from "account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import { SIG_VALIDATION_FAILED, SIG_VALIDATION_SUCCESS } from "account-abstraction/contracts/core/Helpers.sol";
+
+// OpenZeppelin imports
 import { ERC20Mock } from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import { MessageHashUtils } from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+
+
+// — Local imports —
 
 import { Account as AccountAbstraction } from "../src/Account.sol"; // Use alias because Account is an struct from forge-std/Script.sol …
 import { Configuration } from "../script/Configuration.s.sol";
 import { Deploy } from "../script/Deploy.s.sol";
 import { GenerateUserOperation } from "../script/GenerateUserOperation.s.sol";
+
 
 
 /**

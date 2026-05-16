@@ -30,7 +30,6 @@ contract Configuration is Script {
 	 */
 	constructor() {
 		networkConfigs[ETHEREUM_SEPOLIA_CHAIN_ID] = getEthereumSepoliaConfiguration();
-		networkConfigs[ANVIL_CHAIN_ID] = getOrCreateAnvilConfiguration();
 		networkConfigs[ZKSYNC_SEPOLIA_CHAIN_ID] = getZksyncSepoliaConfiguration();
 	}
 

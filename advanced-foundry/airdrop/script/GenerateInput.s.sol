@@ -9,7 +9,9 @@ import { stdJson } from "forge-std/StdJson.sol";
 import { console } from "forge-std/console.sol";
 
 
-// Merkle tree input file generator script
+/**
+ * @notice Merkle tree input file generator
+ */
 contract GenerateInput is Script {
 		uint256 private constant AMOUNT = 25 * 1e18;
 		string[] types = new string[](2);
