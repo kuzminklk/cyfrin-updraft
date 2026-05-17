@@ -20,7 +20,7 @@ Hash: 0x2e4aa5711f1941973c9f0db40ec30d55769cab5a282df85c79638c52c3c3cffe
 Address: 0x1fBeE22858d73DF356272b0CB950d9706A82bA7A  
 Network: Sepolia  
 Verification status: Verified  
-Account: Development-1 
+Account: Development-1  
 
 ### 2. Upgraded 
 Hash: 0xf35117e2ed11d3e67d55f6646afd74c85d62489c0cb116ad021dff891746b8da  
@@ -28,7 +28,7 @@ Network: Sepolia
 Account: Development-1  
 
 
-*Have fixed a little bug*
+*Fixed a little bug*
 
 
 ### 3. Deployed ERC1967Proxy
@@ -43,7 +43,7 @@ Hash: 0x09e77b298b0070233850153eda9c0358dea78a2c585e2b3a4b2b6af0cab347bd
 Address: 0x2E9D4A06Afe00dFc93eba260425A4D946aa4b077  
 Network: Sepolia  
 Verification status: Verified  
-Account: Development-1 
+Account: Development-1  
 
 
 ### 4. Deployed ValueMultiplication
@@ -51,7 +51,7 @@ Hash: 0xd46ae0e0293cd505f5626ca238802a5f54915dcaec24fbb83a6f2f3f4284769f
 Address: 0xD45387A8cF3C914A2B23CEB2FBcBD0414b409cA7  
 Network: Sepolia  
 Verification status: Verified  
-Account: Development-1 
+Account: Development-1  
 
 ### 4. Upgraded 
 Hash: 0x0a5ed465e5cf31c615021eb2cbb5aca0ddd8de8e3674d63c32ae934eebba94ae  
@@ -59,4 +59,4 @@ Network: Sepolia
 Account: Development-1  
 
 
-*Have founded another little bug (“version” function or variable should be veiw), have fixed. But don't do redeployment*
+*Found another little bug (“version” function or variable should be veiw),fixed. But don't do redeployment. Generally, contract works as expected*  

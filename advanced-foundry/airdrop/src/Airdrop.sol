@@ -8,6 +8,7 @@ import { IERC20, SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/Saf
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import { EIP712 } from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 
 /**
@@ -16,7 +17,7 @@ import { ECDSA } from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
  * @dev Implements Merkle Trees for airdrop allowing
  * @dev Implements ECDSA signing and EIP712 standart for user ability to pay fees for another account
  */
-contract Airdrop is EIP712 {
+contract Airdrop is EIP712, Ownable {
 	using SafeERC20 for IERC20;
 
 	error Airdrop__InvalidProof();
@@ -25,7 +26,7 @@ contract Airdrop is EIP712 {
 
 	bytes32 private constant MESSAGE_TYPEHASH = keccak256("Claim(address account, uint256 amount)");
 
-	bytes32 public immutable i_merkleRoot;
+	bytes32 public s_merkleRoot;
 	IERC20 public immutable i_token;
 	address[] private s_claimers;
 	mapping(address claimer => bool claimed) private s_hasClaimed;
@@ -37,41 +38,68 @@ contract Airdrop is EIP712 {
 
 	event Claimed(address account, uint256 amount);
 
-	constructor(bytes32 _merkleRoot, IERC20 _token) EIP712("Airdrop", "1") {
-		i_merkleRoot = _merkleRoot;
+	constructor(bytes32 _merkleRoot, IERC20 _token) EIP712("Airdrop", "1") Ownable(msg.sender) {
+		s_merkleRoot = _merkleRoot;
 		i_token = _token;
+	}
+
+	function setMerkleRoot(bytes32 _merkleRoot) public onlyOwner() {
+		s_merkleRoot = _merkleRoot;
+	}
+
+
+	// — Claim —
+
+	/**
+	* @notice Claim airdrop for an “msg.sender”
+	* @dev External part of a function
+	*/
+	function claim(uint256 _amount, bytes32[] calldata _merkleProof) external {
+		_claim(msg.sender, _amount, _merkleProof);
+	}
+
+	/**
+	* @notice Claim airdrop for an account with appropriate sign
+	* @dev External part of a function
+	*/
+	function claimWithSignature(address _account, uint256 _amount, bytes32[] calldata _merkleProof, uint8 _v, bytes32 _r, bytes32 _s) external {
+		// 1. Check the signature
+		if (!_isValidSignature(_account, getMessageHash(_account, _amount), _v, _r, _s)) {
+			revert Airdrop__InvalidSignature();
+		}
+
+		// 2. Call “_claim”
+		_claim(_account, _amount, _merkleProof);
 	}
 
 	/**
 	* @notice Claim airdrop for an account
-	* @dev Needs sign of the user, which allowed for an airdrop
+	* @dev Internal part of a function
 	*/
-	function claim(address _account, uint256 _amount, bytes32[] calldata _merkleProof, uint8 _v, bytes32 _r, bytes32 _s) external {
+	function _claim(address _account, uint256 _amount, bytes32[] calldata _merkleProof) internal {
 		// 1. Check if account already has claimed
 		if (s_hasClaimed[_account]) {
 			revert Airdrop__AccountAlreadyHasClaimed();
 		}
 
-		// 2. Check the signature
-		if (!_isValidSignature(_account, getMessageHash(_account, _amount), _v, _r, _s)) {
-			revert Airdrop__InvalidSignature();
-		}
-
-		// 3. Hash _account and _amount to produce leaf node of Merkle Tree.
+		// 2. Hash _account and _amount to produce leaf node of Merkle Tree.
 		// Hash twice to avoid collisions (second preimage attack)
 		bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(_account, _amount))));
-		bool verified = MerkleProof.verify(_merkleProof, i_merkleRoot, leaf);
+		bool verified = MerkleProof.verify(_merkleProof, s_merkleRoot, leaf);
 		if (!verified) {
 			revert Airdrop__InvalidProof();
 		}
 
-		// 4. Set variables (change state)
+		// 3. Set variables (change state)
 		s_hasClaimed[_account] = true;
 		emit Claimed(_account, _amount);
 
-		// 5. Do transfer (do interactions)
+		// 4. Do transfer (do interactions)
 		i_token.safeTransfer(_account, _amount);
 	}
+
+
+	// — Signature —
 
 	function getMessageHash(address _account, uint256 _amount) public view returns (bytes32 digest) {
 		return _hashTypedDataV4(

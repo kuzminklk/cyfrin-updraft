@@ -13,6 +13,8 @@ import { Deploy } from "../script/Deploy.s.sol";
 
 contract TestAirdrop is Test {
 
+	bytes32 constant public MERKLE_ROOT = 0x4bd9749690341b06f02c1683c9c74eb3aaf5c745e5c1ab0e58d2ddeca74667d0; // Grab from “script/target/output.json” for “input-local.json” (output and input for local testing)
+
 	address public USER_1;
 	uint256 public USER_1_PRIVATE_KEY;
 	address public USER_2;
@@ -20,7 +22,7 @@ contract TestAirdrop is Test {
 	address public USER_3;
 	uint256 public USER_3_PRIVATE_KEY;
 
-	bytes32[] public PROOF_FOR_USER_1 = [bytes32(0x88287c1d2c79b71eb062217bdacac40c679f0538a0fc2423df079a42a9c5c570)];
+	bytes32[] public PROOF_FOR_USER_1 = [bytes32(0x88287c1d2c79b71eb062217bdacac40c679f0538a0fc2423df079a42a9c5c570)]; // Grab from “script/target/output.json” for “input-local.json” (output and input for local testing)
 
 	uint256 public constant ALLOWED_AMOUNT_TO_CLAIM = 100e18; // 100 tokens with 1e18 percision
 	uint256 public constant UNALLOWED_AMOUNT_TO_CLAIM = 50e18; // 50 tokens with 1e18 precision
@@ -45,18 +47,14 @@ contract TestAirdrop is Test {
 		console.log("Created USER_3 with address: ", USER_3);
 
 		deployer = new Deploy();
-		(token, airdrop) = deployer.deploy();
+		(token, airdrop) = deployer.deploy(MERKLE_ROOT);
 	}
 
 	function testAllowedUserCanClaim() public {
 		uint256 startingBalance = token.balanceOf(USER_1);
-
-		// Make a sign
-		bytes32 digest = airdrop.getMessageHash(USER_1, ALLOWED_AMOUNT_TO_CLAIM);
-		(uint8 v, bytes32 r, bytes32 s) = vm.sign(USER_1_PRIVATE_KEY, digest);
 		
 		vm.startPrank(USER_1);
-			airdrop.claim(USER_1, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
+			airdrop.claim(ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1);
 		vm.stopPrank();
 
 		uint256 endingBalance = token.balanceOf(USER_1);
@@ -68,26 +66,18 @@ contract TestAirdrop is Test {
 	function testUnallowedUserCantClaim() public {
 		uint256 startingBalance = token.balanceOf(USER_3);
 		
-		// Make a sign
-		bytes32 digest = airdrop.getMessageHash(USER_3, ALLOWED_AMOUNT_TO_CLAIM);
-		(uint8 v, bytes32 r, bytes32 s) = vm.sign(USER_3_PRIVATE_KEY, digest);
-		
 		vm.startPrank(USER_3);
 			vm.expectRevert(Airdrop.Airdrop__InvalidProof.selector);
-			airdrop.claim(USER_3, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
+			airdrop.claim(ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1);
 		vm.stopPrank();
 	}
 
 	function testAllowedUserCantClaimUnallowedAmount() public {
 		uint256 startingBalance = token.balanceOf(USER_1);
-
-		// Make a sign
-		bytes32 digest = airdrop.getMessageHash(USER_1, UNALLOWED_AMOUNT_TO_CLAIM);
-		(uint8 v, bytes32 r, bytes32 s) = vm.sign(USER_1_PRIVATE_KEY, digest);
 		
 		vm.startPrank(USER_1);
 			vm.expectRevert(Airdrop.Airdrop__InvalidProof.selector);
-			airdrop.claim(USER_1, UNALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
+			airdrop.claim(UNALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1);
 		vm.stopPrank();
 	}
 
@@ -99,7 +89,7 @@ contract TestAirdrop is Test {
 		(uint8 v, bytes32 r, bytes32 s) = vm.sign(USER_1_PRIVATE_KEY, digest);
 		
 		vm.startPrank(USER_1);
-			airdrop.claim(USER_1, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
+			airdrop.claim( ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1);
 		vm.stopPrank();
 
 		uint256 endingBalance = token.balanceOf(USER_1);
@@ -109,7 +99,7 @@ contract TestAirdrop is Test {
 
 		vm.startPrank(USER_1);
 			vm.expectRevert(Airdrop.Airdrop__AccountAlreadyHasClaimed.selector);
-			airdrop.claim(USER_1, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
+			airdrop.claim(ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1);
 		vm.stopPrank();
 	}
 
@@ -121,7 +111,7 @@ contract TestAirdrop is Test {
 		(uint8 v, bytes32 r, bytes32 s) = vm.sign(USER_1_PRIVATE_KEY, digest);
 		
 		vm.startPrank(USER_3);
-			airdrop.claim(USER_1, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
+			airdrop.claimWithSignature(USER_1, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
 		vm.stopPrank();
 
 		uint256 endingBalance = token.balanceOf(USER_1);
@@ -139,7 +129,7 @@ contract TestAirdrop is Test {
 		
 		vm.startPrank(USER_3);
 			vm.expectRevert(Airdrop.Airdrop__InvalidSignature.selector);
-			airdrop.claim(USER_1, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
+			airdrop.claimWithSignature(USER_1, ALLOWED_AMOUNT_TO_CLAIM, PROOF_FOR_USER_1, v, r, s);
 		vm.stopPrank();
 	}
 }

@@ -18,7 +18,7 @@ To use:
 3. The output file will be generated in /script/target/output.json */
 
 /**
- * @title MakeMerkle
+ * @title GenerateMerkleTree
  * @author Ciara Nightingale
  * @author Cyfrin
  *
@@ -27,7 +27,7 @@ To use:
  * @notice https://github.com/dmfxyz/murky
  */
 
-contract MakeMerkle is Script, ScriptHelper {
+contract GenerateMerkleTree is Script, ScriptHelper {
 		using stdJson for string; // Enables us to use the json cheatcodes for strings
 
 		Merkle private m = new Merkle(); // Instance of the merkle contract from Murky to do shit
