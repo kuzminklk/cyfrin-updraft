@@ -59,4 +59,4 @@ Account: Development-1
 Hash: 0x9a9f755daa839296a70e0bb1356d0d80dd7bf234001e5b90efcbb2b09cd3cae9  
 
 
-*Contracts works as expected*
+*Contracts works as expected (allowed account can take an airdrop)*

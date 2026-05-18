@@ -59,4 +59,4 @@ Network: Sepolia
 Account: Development-1  
 
 
-*Found another little bug (“version” function or variable should be veiw),fixed. But don't do redeployment. Generally, contract works as expected*  
+*Found another little bug (“version” function or variable should be veiw),fixed. But don't do redeployment. Generally, contract works as expected (proxy can be upgraded)*  
