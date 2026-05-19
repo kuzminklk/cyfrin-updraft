@@ -15,7 +15,7 @@ import { EIP712 } from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 
 /**
  * @notice Governance Token
- * @dev Builded in OpenZeppelin Wizzard
+ * @dev Built in OpenZeppelin Wizzard
  */
 contract GovernanceToken is ERC20, EIP712, ERC20Votes {
 	uint256 constant INITIAL_SUPPLY = 1000e18;

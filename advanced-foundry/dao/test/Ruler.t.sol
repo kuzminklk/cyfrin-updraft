@@ -4,12 +4,13 @@
 
 pragma solidity ^0.8.26;
 
-import { Test } from "forge-std/Test.sol";
+import { Test, console } from "forge-std/Test.sol";
 
 import { Value } from "../src/Value.sol";
 import { GovernanceToken } from "../src/GovernanceToken.sol";
 import { Ruler } from "../src/Ruler.sol";
 import { TimeLock } from "../src/TimeLock.sol";
+import { Deploy } from "../script/Deploy.s.sol";
 
 
 /**
@@ -26,6 +27,7 @@ contract RulerTest is Test {
 	GovernanceToken public governanceTokenContract;
 	Ruler public rulerContract;
 	TimeLock public timeLockContract;
+	Deploy public deployer;
 
 	address owner;
 
@@ -35,22 +37,14 @@ contract RulerTest is Test {
 
 	function setUp() public {
 		owner = makeAddr("owner");
+		console.log(unicode"“owner” for “setUp” is: %s", owner);
+		console.log(unicode"“msg.sender” for “setUp” is: %s", msg.sender);
+		console.log(unicode"“tx.origin” for “setUp” is: %s", tx.origin);
 
-		address[] memory proposers;
-		address[] memory executors;
+		deployer = new Deploy();
 
-		vm.startPrank(owner);
-			valueContract = new Value();
-			governanceTokenContract = new GovernanceToken();
-			governanceTokenContract.delegate(owner);
-			timeLockContract = new TimeLock(TIMELOCK_DELAY, proposers, executors);
-			rulerContract = new Ruler(governanceTokenContract, timeLockContract);
-
-			timeLockContract.grantRole(timeLockContract.PROPOSER_ROLE(), address(rulerContract));
-			timeLockContract.grantRole(timeLockContract.EXECUTOR_ROLE(), address(0));
-			timeLockContract.revokeRole(timeLockContract.DEFAULT_ADMIN_ROLE(), owner);
-
-			valueContract.transferOwnership(address(timeLockContract));
+		vm.startPrank(owner, owner);
+			(valueContract, governanceTokenContract, rulerContract, timeLockContract) = deployer.deploy(owner);
 		vm.stopPrank();
 	}
 

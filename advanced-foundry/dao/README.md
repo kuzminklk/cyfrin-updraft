@@ -1,9 +1,17 @@
 
 ### Description
-…
+Implementation of DAO. Built by OpenZeppelin Wizzard
 
 ### Technologies
-…
+OpenZeppelin
+
+### Development Path
+1. Finish course materials
+2. Try to create deploy script and deploy, meet an issue (contract size limit and mess with “msg.sender” and “tx.origin”)  
+
+### To-dos
+- Solve deploy problems in Foundry
+- Rebuild project in Hardhat with more clear scripts
 
 ### Set Up
 Install Foundry dependences:  
@@ -15,4 +23,4 @@ Basic Foundry commands: ```forge build```, ```forge test```
 Other appropriate commands in ```./commands.bash```  
 
 ### Deployments
-Addresses and hashes at ```./deployments.md``` and more deep information at ```./broadcast/```  
+Don't do deployment, script doesn't works correctly (meet contract size limit issue and mess with “msg.sender” and “tx.origin”)  

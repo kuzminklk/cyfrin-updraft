@@ -20,7 +20,7 @@ import { IVotes } from "@openzeppelin/contracts/governance/utils/IVotes.sol";
 
 /**
  * @notice Governor for DAO aka “Ruler”
- * @dev Builded in OpenZeppelin Wizzard
+ * @dev Built in OpenZeppelin Wizzard
  */
 contract Ruler is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockControl {
 	constructor(IVotes _token, TimelockController _timelock)
