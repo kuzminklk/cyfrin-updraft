@@ -5,10 +5,15 @@ Airdrop via Merkel Tree and functionality to sign via ECDSA
 ### Technologies
 Merkle Tree, ERC-191, ERC-712, ECDSA  
 
+
+### Status
+Finished, tested locally, deployed to testnet and tested
+
 ### Development Path
-1. Complete project from course materials
-2. Add “sign” for “msg.sender”
-3. Add functionality to change Merkle Root from the owner, rebuild tests
+1. Completed project from course materials
+2. Added “sign” for “msg.sender”
+3. Added functionality to change Merkle Root from the owner, rebuild tests
+
 
 ### Set Up
 Install Foundry dependences:  
@@ -25,5 +30,5 @@ Additional:
 3. Use Merkle Root when deploy contract  
 4. Use Merkle Proof to run “claim” for allowed address  
 
-### Deployments
-Addresses and hashes at ```./deployments.md``` and more deep information at ```./broadcast/```  
+### Deployments and interactions
+Addresses and hashes at ```./interactions.md``` and more deep information at ```./broadcast/```  

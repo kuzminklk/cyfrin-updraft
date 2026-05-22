@@ -5,13 +5,19 @@ Implementation of DAO. Built by OpenZeppelin Wizzard
 ### Technologies
 OpenZeppelin
 
+
+### Status
+Finished, tested locally, but not deployed to testnet  
+Issue with deployment  
+
 ### Development Path
-1. Finish course materials
-2. Try to create deploy script and deploy, meet an issue (contract size limit and mess with “msg.sender” and “tx.origin”)  
+1. Finished course materials
+2. Tried to create deploy script and deploy to testnet, met an issue (contract size limit and mess with “msg.sender” and “tx.origin”)
 
 ### To-dos
 - Solve deploy problems in Foundry
 - Rebuild project in Hardhat with more clear scripts
+
 
 ### Set Up
 Install Foundry dependences:  
