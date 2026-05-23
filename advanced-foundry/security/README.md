@@ -10,4 +10,4 @@ Finished
 
 ### Set Up
 Install Foundry dependences:  
-```forge install foundry-rs/forge-std --no-git```   
+```forge install foundry-rs/forge-std@v1.16.1 --no-git```    

@@ -20,11 +20,11 @@ Finished at 90%, tested locally, don't deploy to testnet
 
 ### Set up
 Install foundry dependences:
-```forge install foundry-rs/forge-std --no-git```
+```forge install foundry-rs/forge-std@v1.16.1 --no-git```   
+```forge install openzeppelin/openzeppelin-contracts@v5.6.1 --no-git```  
 ```forge install smartcontractkit/chainlink-local@v0.2.9-beta.0 --no-git``` (Beta-version, where the bug was fixed)
-```forge install smartcontractkit/chainlink-evm --no-git```
-```forge install smartcontractkit/chainlink-ccip --no-git```
-```forge install openzeppelin/openzeppelin-contracts --no-git```  
+```forge install smartcontractkit/chainlink-evm --no-git``` (“CRE v0.5.1” release)
+```forge install smartcontractkit/chainlink-ccip@solana-v1.6.2 --no-git``` (Is it right release?)
 
 ### Deployments and interactions
 Don't deploy now
