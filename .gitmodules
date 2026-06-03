@@ -34,3 +34,6 @@
 [submodule "advanced-foundry/stablecoin"]
 	path = advanced-foundry/stablecoin
 	url = git@github.com:kuzminklk/stablecoin.git
+[submodule "advanced-foundry/upgradability"]
+	path = advanced-foundry/upgradability
+	url = git@github.com:kuzminklk/upgradability.git
