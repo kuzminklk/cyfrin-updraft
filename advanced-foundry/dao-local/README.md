@@ -1,6 +1,6 @@
 
 ### Description
-Implementation of DAO. Built by OpenZeppelin Wizzard
+Implementation of DAO. Built using OpenZeppelin Wizzard
 
 ### Technologies
 OpenZeppelin
