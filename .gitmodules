@@ -28,3 +28,6 @@
 [submodule "advanced-foundry/nft"]
 	path = advanced-foundry/nft
 	url = git@github.com:kuzminklk/nft.git
+[submodule "advanced-foundry/rebase-token"]
+	path = advanced-foundry/rebase-token
+	url = git@github.com:kuzminklk/rebase-token.git
