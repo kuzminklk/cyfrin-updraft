@@ -16,3 +16,6 @@
 [submodule "advanced-foundry/account-abstraction/zksync"]
 	path = advanced-foundry/account-abstraction/zksync
 	url = git@github.com:kuzminklk/account-abstraction-zksync.git
+[submodule "advanced-foundry/airdrop"]
+	path = advanced-foundry/airdrop
+	url = git@github.com:kuzminklk/airdrop.git
