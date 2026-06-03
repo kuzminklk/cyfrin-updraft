@@ -19,3 +19,6 @@
 [submodule "advanced-foundry/airdrop"]
 	path = advanced-foundry/airdrop
 	url = git@github.com:kuzminklk/airdrop.git
+[submodule "advanced-foundry/dao"]
+	path = advanced-foundry/dao
+	url = git@github.com:kuzminklk/dao.git
