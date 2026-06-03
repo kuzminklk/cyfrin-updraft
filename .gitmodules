@@ -13,3 +13,6 @@
 [submodule "advanced-foundry/account-abstraction/ethereum"]
 	path = advanced-foundry/account-abstraction/ethereum
 	url = git@github.com:kuzminklk/account-abstraction-ethereum.git
+[submodule "advanced-foundry/account-abstraction/zksync"]
+	path = advanced-foundry/account-abstraction/zksync
+	url = git@github.com:kuzminklk/account-abstraction-zksync.git
