@@ -1,6 +1,6 @@
 
 ### Description
-Airdrop via Merkel Tree and functionality to sign via ECDSA  
+Airdrop via Merkel Tree, have functionality to sign via ECDSA  
 
 ### Technologies
 Merkle Tree, ERC-191, ERC-712, ECDSA  
