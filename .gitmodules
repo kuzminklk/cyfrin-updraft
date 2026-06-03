@@ -22,3 +22,6 @@
 [submodule "advanced-foundry/dao"]
 	path = advanced-foundry/dao
 	url = git@github.com:kuzminklk/dao.git
+[submodule "advanced-foundry/erc-20"]
+	path = advanced-foundry/erc-20
+	url = git@github.com:kuzminklk/erc-20.git
