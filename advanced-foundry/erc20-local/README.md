@@ -1,6 +1,6 @@
 
 ### Description
-ERC20 Contracts
+Smart contracts for tokens. Implements ERC-20
 
 ### Set up
 Install foundry dependences:
