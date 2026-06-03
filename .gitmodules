@@ -25,3 +25,6 @@
 [submodule "advanced-foundry/erc-20"]
 	path = advanced-foundry/erc-20
 	url = git@github.com:kuzminklk/erc-20.git
+[submodule "advanced-foundry/nft"]
+	path = advanced-foundry/nft
+	url = git@github.com:kuzminklk/nft.git
