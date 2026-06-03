@@ -31,3 +31,6 @@
 [submodule "advanced-foundry/rebase-token"]
 	path = advanced-foundry/rebase-token
 	url = git@github.com:kuzminklk/rebase-token.git
+[submodule "advanced-foundry/stablecoin"]
+	path = advanced-foundry/stablecoin
+	url = git@github.com:kuzminklk/stablecoin.git
