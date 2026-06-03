@@ -10,3 +10,6 @@
 	path = full-stack/nft-marketplace
 	url = git@github.com:kuzminklk/nft-marketplace.git
 	branch = main
+[submodule "advanced-foundry/account-abstraction/ethereum"]
+	path = advanced-foundry/account-abstraction/ethereum
+	url = git@github.com:kuzminklk/account-abstraction-ethereum.git
