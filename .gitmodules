@@ -46,3 +46,6 @@
 [submodule "chainlink/lib/chainlink-local"]
 	path = chainlink/lib/chainlink-local
 	url = https://github.com/smartcontractkit/chainlink-local
+[submodule "foundry-fundamentals/raffle"]
+	path = foundry-fundamentals/raffle
+	url = git@github.com:kuzminklk/raffle.git
