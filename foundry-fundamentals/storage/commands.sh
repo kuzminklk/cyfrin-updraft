@@ -1,13 +1,11 @@
 
 
-
-# Anvil commands
+# — Anvil commands —
 
 anvil # Turn on local blockchain
 
 
-
-# Forge commands
+# — Forge commands —
 
 # Init workspace
 forge init

@@ -4,13 +4,6 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-remappings = ["@chainlink/=lib/chainlink-brownie-contracts/"]
-
-fs_permissions = [
-    { access = "read", path = "./broadcast" },
-    { access = "read", path = "./reports" },
-]
-
 [rpc_endpoints]
 ethereum = "${ETHEREUM_RPC_URL}"
 ethereum-sepolia = "${ETHEREUM_SEPOLIA_RPC_URL}"

@@ -1,13 +1,11 @@
 
 
-
-# Anvil commands
+# — Anvil commands —
 
 anvil-zksync
 
 
-
-# Forge commands
+# — Forge commands —
 
 # Deploy to local blockchain
 forge script script/DeployStorageFactory.s.sol --rpc-url http://0.0.0.0:8011 --broadcast --account default --zksync

@@ -12,7 +12,7 @@ Advanced Foundry course from Cyfrin Updraft
 6. Upgradability
 7. Account Abstraction
 8. DAO
-9. Secyrity
+9. Security
 
 
 ### To-dos
