@@ -9,7 +9,7 @@ import { Common } from "@chainlink/contracts/src/v0.8/llo-feeds/libraries/Common
 import { StreamsLookupCompatibleInterface } from "@chainlink/contracts/src/v0.8/automation/interfaces/StreamsLookupCompatibleInterface.sol";
 import { ILogAutomation, Log } from "@chainlink/contracts/src/v0.8/automation/interfaces/ILogAutomation.sol";
 import { IRewardManager } from "@chainlink/contracts/src/v0.8/llo-feeds/v0.3.0/interfaces/IRewardManager.sol";
-import { IERC20 } from "@chainlink/contracts/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/interfaces/IERC20.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { IFeeManager } from "./interfaces/IFeeManager.sol";
 import { IVerifierProxy } from "./interfaces/IVerifierProxy.sol";
