@@ -3,7 +3,7 @@
 ### Description
 Advanced Foundry course from Cyfrin Updraft
 
-### Sections & Projects
+### Sections
 1. ERC-20
 2. NFT
 3. Stablecoin
