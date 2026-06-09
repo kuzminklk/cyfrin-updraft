@@ -22,7 +22,7 @@ forge test
 forge create StorageFactory --interactive --broadcast
 
 # Delpoy contract via script
-forge script script/DeployStorageFactory.s.sol --rpc-url sepolia --broadcast --account development
+forge script script/DeployStorageFactory.s.sol --rpc-url ethereum-sepolia --broadcast --account development
 
 # Formatting
 forge fmt

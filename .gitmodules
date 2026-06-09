@@ -49,3 +49,9 @@
 [submodule "foundry-fundamentals/raffle"]
 	path = foundry-fundamentals/raffle
 	url = git@github.com:kuzminklk/raffle.git
+[submodule "foundry-fundamentals/fund-me"]
+	path = foundry-fundamentals/fund-me
+	url = git@github.com:kuzminklk/fund-me.git
+[submodule "foundry-fundamentals/storage/lib/forge-std"]
+	path = foundry-fundamentals/storage/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
