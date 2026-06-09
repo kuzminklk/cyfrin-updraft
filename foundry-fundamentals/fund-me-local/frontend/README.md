@@ -3,4 +3,4 @@
 Web-interface for funding smart-contract
 
 ### Technologies
-Ethers
+Ethers.js

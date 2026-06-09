@@ -14,7 +14,7 @@ forge script script/DeployStorageFactory.s.sol --rpc-url http://0.0.0.0:8011 --b
 forge script script/DeployStorageFactory.s.sol --rpc-url zk-sepolia --broadcast --account development --zksync --legacy
 
 # Deploy to ZK-sync Sepolia directly (don't work with Infura)
-forge create StorageFactory --rpc-url zk-sepolia --broadcast --account development --zksync --legacy
+forge create StorageFactory --rpc-url zksynk-sepolia --broadcast --account development --zksync --legacy
 
 # Use oficcial zk-sync Matter Labs RPC (work)
 forge create StorageFactory --rpc-url https://sepolia.era.zksync.dev --broadcast --account development --zksync --legacy

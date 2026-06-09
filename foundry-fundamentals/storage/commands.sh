@@ -28,8 +28,7 @@ forge script script/DeployStorageFactory.s.sol --rpc-url sepolia --broadcast --a
 forge fmt
 
 
-
-# Cast commands
+# — Cast commands —
 
 # Send write transaction
 cast send 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 "createStorageContract()" --rpc-url $RPC_URL

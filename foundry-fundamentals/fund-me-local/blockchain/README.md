@@ -1,6 +1,6 @@
 
 ### Description
-Funding smart-contract with simple web interface
+Funding smart-contract
 
 ### Set Up
 Install foundry dependences:
