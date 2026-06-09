@@ -17,5 +17,5 @@ Advanced Foundry course from Cyfrin Updraft
 
 ### To-dos
 - Deploy each project to testnet
-- Develop frontend for each project
+- Develop Web UI for each project
 - Do security research for each project
