@@ -11,7 +11,7 @@ Part of computer-science study curriculum availabe in [Notion](https://app.notio
 2. [Chainlink](https://updraft.cyfrin.io/courses/chainlink-fundamentals)
 3. [Foundry fundamentals](https://updraft.cyfrin.io/courses/foundry)
 4. [Full-stack Web 3](https://updraft.cyfrin.io/courses/full-stack-web3-development-crash-course)
-4. [Advanced Foundry](https://updraft.cyfrin.io/courses/advanced-foundry)
+5. [Advanced Foundry](https://updraft.cyfrin.io/courses/advanced-foundry)
 
 
 ### Usage
