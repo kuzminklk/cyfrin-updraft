@@ -1,9 +1,6 @@
-
-
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.18;
-
 
 // ——— Variables ———
 
@@ -19,7 +16,7 @@ contract StorageVariables {
 	uint256 private s_userNumber = 2000;
 
 	// Internal. Can be accessible from child contracts
-	uint256 internal s_contractNumber = 3000; 
+	uint256 internal s_contractNumber = 3000;
 }
 
 // — Constant Variables —
@@ -46,8 +43,8 @@ contract ImmutableVariables {
 		address
 		bytes32
 */
-	
-// — Reference types — 
+
+// — Reference types —
 /*
 	Store pointer
 		string
@@ -62,7 +59,8 @@ contract ImmutableVariables {
 contract ReferenceTypes {
 	uint256[] public s_scores = [10, 20, 50];
 
-	function processScores(uint256[] calldata c_input) public { // Calldata. Read-only. Good for external parameters, that don't be changed
+	function processScores(uint256[] calldata c_input) public {
+		// Calldata. Read-only. Good for external parameters, that don't be changed
 		uint256[] storage s_scoresPointer = s_scores;
 		s_scoresPointer[0] = 30; // [30, 20, 50]
 
@@ -76,19 +74,17 @@ contract ReferenceTypes {
 	}
 }
 
-
 // ——— Functions ———
 
-/* 
+/*
 	Visibility: public, private, internal, external
 	Mutability: payable, view, pure
 */
 
-
 // ——— Transaction Context And Global Variables ———
 
 // — Transaction Context —
-/* 
+/*
 	msg.sender — sender
 	msg.value — value, only for payable
 	msg.data — all calldata
@@ -101,13 +97,11 @@ contract ReferenceTypes {
 	block.number — current block number
 */
 
-
 // ——— Control Structures ———
-/* 
+/*
 	Conditions (if)
 	Loops (for, while)
 */
-
 
 // ——— Errors Handling ———
 
@@ -119,12 +113,11 @@ contract ErrorsHandling {
 	mapping(address => uint256) public balances;
 
 	function withdraw(uint256 amount) public {
-		if(balances[msg.sender] < amount) {
+		if (balances[msg.sender] < amount) {
 			revert InsufficentBalance(msg.sender);
 		}
 	}
 }
-
 
 // ——— Events ———
 
@@ -139,7 +132,6 @@ contract Token {
 		s_balances[to] += amount;
 	}
 }
-
 
 // ——— Modifiers ———
 
@@ -160,7 +152,6 @@ contract Owner {
 	}
 }
 
-
 // ——— Interfaces ———
 
 interface InterfacePayable {
@@ -178,9 +169,8 @@ contract PaymentProcessor is InterfacePayable {
 		return true;
 	}
 
-	function getBalance(address account) external view override returns (uint256) {	
+	function getBalance(address account) external view override returns (uint256) {
 		return balances[account];
 	}
-
 }
 

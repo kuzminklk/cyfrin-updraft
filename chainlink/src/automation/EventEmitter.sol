@@ -1,15 +1,12 @@
-
-
-// SPDX-License-Identifier: MIT  
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
+contract EventEmitter {
+	event WantsToCount(address indexed msgSender);
 
-contract EventEmitter {  
-    event WantsToCount(address indexed msgSender);
+	constructor() {}
 
-    constructor() {}
-
-    function emitCountEvent() public {  
-        emit WantsToCount(msg.sender);  
-    }  
+	function emitCountEvent() public {
+		emit WantsToCount(msg.sender);
+	}
 }

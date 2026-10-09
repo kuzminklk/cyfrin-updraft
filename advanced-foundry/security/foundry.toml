@@ -12,7 +12,7 @@ depth = 25
 fail_on_revert = false
 
 [profile.default.model_checker]
-contracts = {'./src/CaughtWithSymbolic.sol' = ['CaughtWithSymbolic']}
+contracts = { './src/CaughtWithSymbolic.sol' = ['CaughtWithSymbolic'] }
 engine = 'chc'
 timeout = 1000
 targets = ['assert']

@@ -1,11 +1,8 @@
-
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import { HousePicker } from "../src/vrf/HousePicker.sol";
-import { Script } from "forge-std/Script.sol";
-
+import {HousePicker} from "../src/vrf/HousePicker.sol";
+import {Script} from "forge-std/Script.sol";
 
 contract DeployHousePicker is Script {
 	function run() external {

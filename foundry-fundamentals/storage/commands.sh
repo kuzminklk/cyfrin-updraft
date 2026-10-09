@@ -1,9 +1,6 @@
-
-
 # — Anvil commands —
 
 anvil # Turn on local blockchain
-
 
 # — Forge commands —
 
@@ -11,7 +8,7 @@ anvil # Turn on local blockchain
 forge init
 
 # Compile
-forge compile 
+forge compile
 # Same as
 forge build
 
@@ -26,7 +23,6 @@ forge script script/DeployStorageFactory.s.sol --rpc-url ethereum-sepolia --broa
 
 # Formatting
 forge fmt
-
 
 # — Cast commands —
 

@@ -1,10 +1,7 @@
-
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // ——— Libraries ———
 
@@ -18,10 +15,9 @@ library MathUtilities {
 	}
 }
 
-
 // ——— Inheritance ———
 
-// — Basic — 
+// — Basic —
 contract Token {
 	string public name;
 	uint256 public totalSupply;
@@ -31,7 +27,7 @@ contract Token {
 		totalSupply = 1000000;
 	}
 
-	function getInfo() public virtual view returns (string memory) {
+	function getInfo() public view virtual returns (string memory) {
 		return string.concat("Token: ", name);
 	}
 }
@@ -43,15 +39,15 @@ contract Gold is Token {
 		return "GOLD";
 	}
 
-	function getInfo() public override view returns (string memory) {
-		return string.concat(super.getInfo(),"RWA Gold Token");
+	function getInfo() public view override returns (string memory) {
+		return string.concat(super.getInfo(), "RWA Gold Token");
 	}
 }
 
-// — From OpenZeppelin contracts — 
+// — From OpenZeppelin contracts —
 contract Silver is ERC20 {
 	constructor() ERC20("Silver", "SILVER") {
-		_mint(msg.sender, 1000000 * 10**18);
+		_mint(msg.sender, 1000000 * 10 ** 18);
 	}
 
 	function burn(uint256 amount) public {
@@ -64,7 +60,7 @@ contract Pyramid is ERC20 {
 
 	constructor(address _feeCollector) ERC20("Pyramid", "PYRAMID") {
 		feeCollector = _feeCollector;
-		_mint(msg.sender, 1000000 * 10**18);
+		_mint(msg.sender, 1000000 * 10 ** 18);
 	}
 
 	function transfer(address to, uint256 amount) public override returns (bool) {

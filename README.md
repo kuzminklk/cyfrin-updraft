@@ -11,8 +11,8 @@ Part of computer-science study curriculum available in [Notion](https://kuzminkl
 ### Technologies
 
 Development: Visual Studio Code  
-Programming language: Solidity
-Environment: Foundry, Hardhat
+Programming language: Solidity  
+Environment: Foundry, Hardhat  
 Formatting: “.editorconfig”, “.vscode/…”, Foundry, Prettier
 
 ### Courses
@@ -27,4 +27,4 @@ Formatting: “.editorconfig”, “.vscode/…”, Foundry, Prettier
 
 ### Clone
 
-To clone with submodules: `git clone --recursive --remote-submodules`
+To clone with submodules: `git clone --recurse-submodules`

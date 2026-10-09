@@ -1,5 +1,3 @@
-
-
 # ——— Deploy ———
 
 # — ERC20 (Copper) —
@@ -53,7 +51,7 @@ cast send 0x1A0D56B0772327358C8a6478B764Db65B081f5e5 "mint(address,uint256)" 0xa
 cast send 0x1A0D56B0772327358C8a6478B764Db65B081f5e5 "grantRole(bytes32,address)" 0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6 0xD168401148Af1f54aD474C50E77E95844274Ee96 --rpc-url ethereum-sepolia --account development-1
 
 # — Market —
-# Send value for 
+# Send value for
 cast send 0xD168401148Af1f54aD474C50E77E95844274Ee96 --value 0.001ether --rpc-url ethereum-sepolia --account development-1
 
 

@@ -1,9 +1,6 @@
-
-
 # — Anvil commands —
 
 anvil-zksync
-
 
 # — Forge commands —
 

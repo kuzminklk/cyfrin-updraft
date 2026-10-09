@@ -1,35 +1,33 @@
-
-
-// SPDX-License-Identifier: MIT  
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.26;
 
-import { Log, ILogAutomation } from "@chainlink/contracts/src/v0.8/automation/interfaces/ILogAutomation.sol";
+import {Log, ILogAutomation} from "@chainlink/contracts/src/v0.8/automation/interfaces/ILogAutomation.sol";
 
+contract Counter is ILogAutomation {
+	event CountedBy(address indexed msgSender);
 
-contract Counter is ILogAutomation {  
-    event CountedBy(address indexed msgSender);
+	uint256 public counted;
 
-    uint256 public counted;
+	constructor() {}
 
-    constructor() {}
+	function checkLog(Log calldata log, bytes memory)
+		external
+		pure
+		returns (bool upkeepNeeded, bytes memory performData)
+	{
+		upkeepNeeded = true;
+		address logSender = bytes32ToAddress(log.topics[1]);
+		performData = abi.encode(logSender);
+	}
 
-    function checkLog(  
-        Log calldata log,  
-        bytes memory  
-    ) external pure returns (bool upkeepNeeded, bytes memory performData) {  
-        upkeepNeeded = true;  
-        address logSender = bytes32ToAddress(log.topics[1]);  
-        performData = abi.encode(logSender);  
-    }
+	function performUpkeep(bytes calldata performData) external override {
+		counted += 1;
+		address logSender = abi.decode(performData, (address));
+		emit CountedBy(logSender);
+	}
 
-    function performUpkeep(bytes calldata performData) external override {  
-        counted += 1;  
-        address logSender = abi.decode(performData, (address));  
-        emit CountedBy(logSender);  
-    }
-
-    function bytes32ToAddress(bytes32 _address) public pure returns (address) {  
-        return address(uint160(uint256(_address)));  
-    }  
+	function bytes32ToAddress(bytes32 _address) public pure returns (address) {
+		return address(uint160(uint256(_address)));
+	}
 }
