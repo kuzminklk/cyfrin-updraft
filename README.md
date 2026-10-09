@@ -8,6 +8,13 @@ Workbook for [Cyfrin Updraft](https://updraft.cyfrin.io/) study materials
 
 Part of computer-science study curriculum available in [Notion](https://kuzminklk.notion.site/31154d4de03580d7b5ceca5b187846be)
 
+### Technologies
+
+Development: Visual Studio Code  
+Programming language: Solidity
+Environment: Foundry, Hardhat
+Formatting: “.editorconfig”, “.vscode/…”, Foundry, Prettier
+
 ### Courses
 
 1. [Solidity](https://updraft.cyfrin.io/courses/solidity)
